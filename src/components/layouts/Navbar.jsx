@@ -1,7 +1,27 @@
 import React from 'react';
 import Logo from './Logo';
+import Link from 'next/link';
+import NavLink from '../buttons/NavLink';
+import { FiShoppingCart } from "react-icons/fi";
 
 const Navbar = () => {
+    const nav = <>
+        <li>
+            <NavLink href={"/"}>Home</NavLink>
+        </li>
+        <li>
+            <NavLink href={"/products"}>Products</NavLink>
+        </li>
+        <li>
+            <NavLink href={"/about"}>About</NavLink>
+        </li>
+        <li>
+            <NavLink href={"/contact"}>Contact</NavLink>
+        </li>
+        <li>
+            <NavLink href={"/blog"}>Blog</NavLink>
+        </li>
+    </>
     return (
         <div>
             <div className="bg-base-100 navbar">
@@ -13,36 +33,25 @@ const Navbar = () => {
                         <ul
                             tabIndex="-1"
                             className="z-1 bg-base-100 shadow mt-3 p-2 rounded-box w-52 menu menu-sm dropdown-content">
-                            <li><a>Item 1</a></li>
-                            <li>
-                                <a>Parent</a>
-                                <ul className="p-2">
-                                    <li><a>Submenu 1</a></li>
-                                    <li><a>Submenu 2</a></li>
-                                </ul>
-                            </li>
-                            <li><a>Item 3</a></li>
+                            {nav}
                         </ul>
                     </div>
                     <Logo></Logo>
                 </div>
                 <div className="hidden lg:flex navbar-center">
                     <ul className="px-1 menu menu-horizontal">
-                        <li><a>Item 1</a></li>
-                        <li>
-                            <details>
-                                <summary>Parent</summary>
-                                <ul className="z-1 bg-base-100 p-2 w-40">
-                                    <li><a>Submenu 1</a></li>
-                                    <li><a>Submenu 2</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                        <li><a>Item 3</a></li>
+                        {nav}
                     </ul>
                 </div>
-                <div className="navbar-end">
-                    <a className="btn">Button</a>
+                <div className="space-x-4 navbar-end">
+                    <Link href={"/cart"}>
+                        <button className="btn btn-primary">
+                            <FiShoppingCart className="text-xl" />
+                        </button>
+                    </Link>
+                    <Link href={"/login"}>
+                        <button className="btn-outline btn btn-primary">Login</button>
+                    </Link>
                 </div>
             </div>
         </div>
