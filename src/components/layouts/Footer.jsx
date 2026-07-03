@@ -22,48 +22,48 @@ const Footer = () => {
                         </span>
                     </div>
                     <p className="text-slate-400 text-sm leading-relaxed">
-                        আপনার শিশুর সুন্দর ভবিষ্যৎ ও সঠিক যত্নের বিশ্বস্ত সঙ্গী। আমরা নিশ্চিত করি প্রতিটি শিশুর নিরাপদ ও আনন্দময় শৈশব।
+                        A trusted companion for your child's bright future and proper care. We ensure a safe, nurturing, and joyful childhood for every kid.
                     </p>
                 </div>
 
                 {/* 2. Quick Links */}
                 <div>
                     <h4 className="mb-4 pb-1 border-primary border-b-2 w-fit font-semibold text-white text-lg">
-                        কুইক লিঙ্ক
+                        Quick Links
                     </h4>
                     <ul className="space-y-2 text-sm">
-                        <li><Link href="/" className="hover:text-primary transition">হোম পেজ</Link></li>
-                        <li><Link href="/about" className="hover:text-primary transition">আমাদের সম্পর্কে</Link></li>
-                        <li><Link href="/services" className="hover:text-primary transition">সেবাসমূহ</Link></li>
-                        <li><Link href="/contact" className="hover:text-primary transition">যোগাযোগ</Link></li>
+                        <li><Link href="/" className="hover:text-primary transition">Home</Link></li>
+                        <li><Link href="/about" className="hover:text-primary transition">About Us</Link></li>
+                        <li><Link href="/services" className="hover:text-primary transition">Services</Link></li>
+                        <li><Link href="/contact" className="hover:text-primary transition">Contact</Link></li>
                     </ul>
                 </div>
 
                 {/* 3. Support & Resources */}
                 <div>
                     <h4 className="mb-4 pb-1 border-primary border-b-2 w-fit font-semibold text-white text-lg">
-                        সহায়তা
+                        Support
                     </h4>
                     <ul className="space-y-2 text-sm">
-                        <li><Link href="/faq" className="hover:text-primary transition">এফএকিউ (FAQ)</Link></li>
-                        <li><Link href="/privacy" className="hover:text-primary transition">প্রাইভেসি পলিসি</Link></li>
-                        <li><Link href="/terms" className="hover:text-primary transition">শর্তাবলী</Link></li>
+                        <li><Link href="/faq" className="hover:text-primary transition">FAQ</Link></li>
+                        <li><Link href="/privacy" className="hover:text-primary transition">Privacy Policy</Link></li>
+                        <li><Link href="/terms" className="hover:text-primary transition">Terms & Conditions</Link></li>
                     </ul>
                 </div>
 
                 {/* 4. Contact Info */}
                 <div>
                     <h4 className="mb-4 pb-1 border-primary border-b-2 w-fit font-semibold text-white text-lg">
-                        যোগাযোগ করুন
+                        Contact Us
                     </h4>
                     <ul className="space-y-3 text-slate-400 text-sm">
                         <li className="flex items-center space-x-2">
                             <span>📍</span>
-                            <span>ঢাকা, বাংলাদেশ</span>
+                            <span>Dhaka, Bangladesh</span>
                         </li>
                         <li className="flex items-center space-x-2">
                             <span>📞</span>
-                            <span>+৮৮০ ১২৩৪৫৬৭৮৯</span>
+                            <span>+880 123456789</span>
                         </li>
                         <li className="flex items-center space-x-2">
                             <span>✉️</span>
@@ -76,7 +76,7 @@ const Footer = () => {
 
             {/* Bottom Copyright Section */}
             <div className="mt-12 pt-6 border-slate-800 border-t text-slate-500 text-sm text-center">
-                <p>&copy; {new Date().getFullYear()} Hero Kidz. সর্বস্বত্ব সংরক্ষিত।</p>
+                <p>&copy; {new Date().getFullYear()} Hero Kidz. All rights reserved.</p>
             </div>
         </footer>
     );
