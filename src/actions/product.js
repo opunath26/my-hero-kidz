@@ -5,7 +5,6 @@ import { ObjectId } from "mongodb";
 
 export const getProducts = async () => {
     try {
-        // 👈 এখানে অবশ্যই 'await' যুক্ত করতে হবে কারণ dbConnect এখন async
         const db = await dbConnect(collection.PRODUCTS); 
         const products = await db.find().toArray(); 
         
@@ -26,7 +25,6 @@ export const getSingleProduct = async (id) => {
     
     try {
         const query = { _id: new ObjectId(id) };
-        // 👈 এখানেও 'await' যুক্ত করতে হবে
         const db = await dbConnect(collection.PRODUCTS); 
         const product = await db.findOne(query);
 

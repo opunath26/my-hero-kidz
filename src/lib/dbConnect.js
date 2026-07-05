@@ -35,7 +35,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const dbConnect = async (cname) => {
-    // 👈 টপোলজি ক্লোজড হওয়া ঠেকাতে প্রতিবার কুয়েরির আগে কানেকশন চেক ও রিকানেক্ট করা হবে
     try {
         await client.connect(); 
         return client.db(dbname).collection(cname);

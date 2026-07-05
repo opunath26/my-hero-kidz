@@ -1,9 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
-import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag, FaEye } from 'react-icons/fa';
 
 const ProductCard = ({ product }) => {
-    const { title, image, price, discount, ratings, reviews, sold } = product;
+    const { _id, title, image, price, discount, ratings, reviews, sold } = product;
 
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
@@ -24,7 +25,6 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="group flex flex-col justify-between bg-white shadow-sm hover:shadow-xl border border-slate-100 rounded-2xl overflow-hidden transition-all duration-300 card">
-            {/* Image Section */}
             <div className="relative bg-slate-50 rounded-t-2xl w-full aspect-square overflow-hidden">
                 {hasDiscount && (
                     <div className="top-3 left-3 z-10 absolute bg-red-500 shadow-sm px-2.5 py-1 rounded-lg font-bold text-white text-xs animate-pulse">
@@ -41,15 +41,12 @@ const ProductCard = ({ product }) => {
                 />
             </div>
 
-            {/* Content Section */}
             <div className="flex flex-col flex-grow justify-between space-y-4 p-5">
                 <div className="space-y-2">
-                    {/* Title */}
                     <h3 className="min-h-[48px] font-bold text-slate-800 group-hover:text-primary text-base line-clamp-2 transition-colors">
                         {title}
                     </h3>
 
-                    {/* Rating & Reviews */}
                     <div className="flex items-center space-x-2 text-sm">
                         <div className="flex items-center space-x-0.5">{renderStars(ratings)}</div>
                         <span className="font-medium text-slate-500">({reviews})</span>
@@ -60,7 +57,6 @@ const ProductCard = ({ product }) => {
                     </div>
                 </div>
 
-                {/* Price and Action Button */}
                 <div className="space-y-3 pt-2">
                     <div className="flex items-baseline space-x-2">
                         <span className="font-extrabold text-primary text-2xl">৳{discountedPrice}</span>
@@ -69,10 +65,20 @@ const ProductCard = ({ product }) => {
                         )}
                     </div>
 
-                    <button className="gap-2 shadow-md shadow-primary/20 rounded-xl w-full font-semibold text-white normal-case hover:scale-[1.01] active:scale-95 transition-all btn btn-primary">
-                        <FaShoppingBag className="text-lg" />
-                        Add to Cart
-                    </button>
+                    <div className="gap-2 grid grid-cols-2">
+                        <Link 
+                            href={`/products/${_id}`}
+                            className="flex justify-center items-center gap-2 bg-slate-50 hover:bg-primary/5 py-3 border border-slate-200 hover:border-primary/30 rounded-xl font-semibold text-slate-700 hover:text-primary text-sm transition-all"
+                        >
+                            <FaEye className="text-base" />
+                            Details
+                        </Link>
+
+                        <button className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-md shadow-primary/10 py-3 rounded-xl font-semibold text-white text-sm active:scale-95 transition-all">
+                            <FaShoppingBag className="text-base" />
+                            Add to Cart
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
