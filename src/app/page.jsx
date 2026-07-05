@@ -1,5 +1,6 @@
 import About from "@/components/home/About";
 import Banner from "@/components/home/Banner";
+import Contact from "@/components/home/Contect";
 import Products from "@/components/home/Products";
 import Image from "next/image";
 
@@ -15,7 +16,9 @@ export default function Home() {
       </section>
       <section>
         <About></About>
+        <Contact></Contact>
       </section>
     </div>
   );
 }
+
