@@ -1,19 +1,46 @@
 const uri = process.env.MONGODB_URI;
 const dbname = process.env.DBNAME;
-const collections = {
+
+export const collection = {
     PRODUCTS: "products",
-}
+};
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
 
-export const dbConnect = (cname) => {
-    return client.db(dbname).collections(cname);
+if (!uri) {
+    throw new Error('Please add your MONGODB_URI to .env.local');
 }
+
+let client;
+
+if (process.env.NODE_ENV === 'development') {
+    if (!global._mongoClient) {
+        global._mongoClient = new MongoClient(uri, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+    }
+    client = global._mongoClient;
+} else {
+    client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+}
+
+export const dbConnect = async (cname) => {
+    // 👈 টপোলজি ক্লোজড হওয়া ঠেকাতে প্রতিবার কুয়েরির আগে কানেকশন চেক ও রিকানেক্ট করা হবে
+    try {
+        await client.connect(); 
+        return client.db(dbname).collection(cname);
+    } catch (error) {
+        console.error("MongoDB Reconnection Failed:", error);
+        throw error;
+    }
+};
