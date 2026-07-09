@@ -53,7 +53,7 @@ const About = () => {
 
                 <div className="relative bg-slate-50 shadow-md rounded-3xl w-full aspect-square overflow-hidden">
                     <Image
-                        src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=600"
+                        src="https://i.ibb.co.com/VctRvhKM/kidz.avif"
                         alt="Hero Kidz About Banner"
                         fill
                         priority

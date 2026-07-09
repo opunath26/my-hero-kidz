@@ -15,11 +15,7 @@ export default function Home() {
       <section>
         <Products></Products>
       </section>
-      <section>
-        <About></About>
-        <Contact></Contact>
-        <Blog></Blog>
-      </section>
+      
     </div>
   );
 }
