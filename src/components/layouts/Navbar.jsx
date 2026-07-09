@@ -44,12 +44,12 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="space-x-4 navbar-end">
-                    <Link href={"/cart"}>
+                    <Link href={"#"}>
                         <button className="btn btn-primary">
                             <FiShoppingCart className="text-xl" />
                         </button>
                     </Link>
-                    <Link href={"/login"}>
+                    <Link href={"#"}>
                         <button className="btn-outline btn btn-primary">Login</button>
                     </Link>
                 </div>
