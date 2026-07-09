@@ -34,8 +34,8 @@ const Footer = () => {
                     <ul className="space-y-2 text-sm">
                         <li><Link href="/" className="hover:text-primary transition">Home</Link></li>
                         <li><Link href="/about" className="hover:text-primary transition">About Us</Link></li>
-                        <li><Link href="/services" className="hover:text-primary transition">Services</Link></li>
-                        <li><Link href="/contact" className="hover:text-primary transition">Contact</Link></li>
+                        {/* <li><Link href="/services" className="hover:text-primary transition">Services</Link></li> */}
+                        {/* <li><Link href="/contact" className="hover:text-primary transition">Contact</Link></li> */}
                     </ul>
                 </div>
 
@@ -45,9 +45,9 @@ const Footer = () => {
                         Support
                     </h4>
                     <ul className="space-y-2 text-sm">
-                        <li><Link href="/faq" className="hover:text-primary transition">FAQ</Link></li>
-                        <li><Link href="/privacy" className="hover:text-primary transition">Privacy Policy</Link></li>
-                        <li><Link href="/terms" className="hover:text-primary transition">Terms & Conditions</Link></li>
+                        {/* <li><Link href="/faq" className="hover:text-primary transition">FAQ</Link></li> */}
+                        {/* <li><Link href="/privacy" className="hover:text-primary transition">Privacy Policy</Link></li> */}
+                        {/* <li><Link href="/terms" className="hover:text-primary transition">Terms & Conditions</Link></li> */}
                     </ul>
                 </div>
 
