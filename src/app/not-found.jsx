@@ -7,21 +7,24 @@ const NotFound = () => {
     return (
         <div className="flex flex-col justify-center items-center px-4 py-12 min-h-[70vh] text-slate-800 text-center">
             {/* Funny/Cute Illustration Box */}
-            <div className="relative flex justify-center items-center bg-slate-50 mb-8 p-8 rounded-full w-full max-w-sm aspect-square">
-                <Image 
-                    src="https://images.unsplash.com/photo-1537655780520-1e392edd816a?q=80&w=600" 
-                    alt="Lost Toy Illustration"
-                    fill
-                    priority
-                    className="opacity-85 rounded-full object-cover mask-image"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent rounded-full" />
-                
-                {/* Big Bold 404 Overlay */}
-                <h1 className="absolute font-black text-primary/20 text-7xl md:text-8xl tracking-widest animate-bounce select-none">
-                    404
-                </h1>
-            </div>
+            <div className="relative flex justify-center items-center bg-slate-50 shadow-inner mb-8 p-8 rounded-full w-full max-w-sm aspect-square overflow-hidden">
+    <Image 
+        src="https://i.ibb.co.com/XfQmTkxc/markus-spiske-I-y1lb2-Fz-JQ-unsplash.jpg" 
+        alt="Lost Toy Illustration"
+        fill
+        priority
+        className="opacity-75 rounded-full object-cover" 
+    />
+    
+    {/* ইমেজের ওপর একটু হালকা কালো/ধূসর ওভারলে, যা লেখাকে স্পষ্ট করবে */}
+    <div className="absolute inset-0 bg-black/10 rounded-full" />
+    <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent rounded-full" />
+    
+    {/* Big Bold 404 Overlay - এখন এটি একদম পরিষ্কার দেখাবে */}
+    <h1 className="z-10 absolute drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)] font-black text-primary text-7xl md:text-8xl tracking-widest animate-bounce select-none">
+        404
+    </h1>
+</div>
 
             {/* Error Message Content */}
             <div className="space-y-4 max-w-md">
