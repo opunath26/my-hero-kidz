@@ -16,11 +16,9 @@ const NotFound = () => {
         className="opacity-75 rounded-full object-cover" 
     />
     
-    {/* ইমেজের ওপর একটু হালকা কালো/ধূসর ওভারলে, যা লেখাকে স্পষ্ট করবে */}
     <div className="absolute inset-0 bg-black/10 rounded-full" />
     <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent rounded-full" />
     
-    {/* Big Bold 404 Overlay - এখন এটি একদম পরিষ্কার দেখাবে */}
     <h1 className="z-10 absolute drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)] font-black text-primary text-7xl md:text-8xl tracking-widest animate-bounce select-none">
         404
     </h1>
