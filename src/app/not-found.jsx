@@ -27,7 +27,7 @@ const NotFound = () => {
             {/* Error Message Content */}
             <div className="space-y-4 max-w-md">
                 <div className="inline-flex items-center gap-2 bg-amber-500/10 px-4 py-1.5 rounded-full font-bold text-amber-600 text-xs">
-                    <FaQuestionCircle /> Oh No! Page Lost in the Toy Kingdom
+                    <FaQuestionCircle /> Oh No! Page Lost in the Toy Kingdom.
                 </div>
                 <h2 className="font-black text-slate-900 text-2xl md:text-4xl leading-tight">
                     Where is the Page <br />
