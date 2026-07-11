@@ -49,7 +49,7 @@ const Navbar = () => {
                             <FiShoppingCart className="text-xl" />
                         </button>
                     </Link>
-                    <Link href={"#"}>
+                    <Link href={"/login"}>
                         <button className="btn-outline btn btn-primary">Login</button>
                     </Link>
                 </div>
