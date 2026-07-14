@@ -1,6 +1,7 @@
 import Banner from "@/components/home/Banner";
 import Products from "@/components/home/Products";
 import Testimonials from "@/components/home/Testimonials";
+import AgeFilter from "@/components/home/AgeFilter";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import Image from "next/image";
 
@@ -15,10 +16,13 @@ export default function Home() {
       <section>
         <Products></Products>
         <WhyChooseUs></WhyChooseUs>
+        <AgeFilter></AgeFilter>
         <Testimonials />
       </section>
       
     </div>
   );
 }
+
+
 
