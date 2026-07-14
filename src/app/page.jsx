@@ -3,6 +3,7 @@ import Products from "@/components/home/Products";
 import Testimonials from "@/components/home/Testimonials";
 import AgeFilter from "@/components/home/AgeFilter";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
+import Newsletter from "@/components/home/Newsletter";
 import Image from "next/image";
 
 export default function Home() {
@@ -18,11 +19,13 @@ export default function Home() {
         <WhyChooseUs></WhyChooseUs>
         <AgeFilter></AgeFilter>
         <Testimonials />
+        <Newsletter></Newsletter>
       </section>
       
     </div>
   );
 }
+
 
 
 
