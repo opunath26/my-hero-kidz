@@ -7,6 +7,7 @@ import Newsletter from "@/components/home/Newsletter";
 import Image from "next/image";
 import HowItWorks from "@/components/home/HowItWorks";
 import FunStats from "@/components/home/FunStats";
+import VisualBadges from "@/components/home/VisualBadges";
 
 export default function Home() {
   // throw new Error("Testing Hero Kidz Error Page!");
@@ -17,6 +18,7 @@ export default function Home() {
       </section>
 
       <section>
+        <VisualBadges />
         <Products></Products>
         <FunStats />
         <WhyChooseUs></WhyChooseUs>
