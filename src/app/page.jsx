@@ -6,6 +6,7 @@ import WhyChooseUs from "@/components/home/WhyChooseUs";
 import Newsletter from "@/components/home/Newsletter";
 import Image from "next/image";
 import HowItWorks from "@/components/home/HowItWorks";
+import FunStats from "@/components/home/FunStats";
 
 export default function Home() {
   // throw new Error("Testing Hero Kidz Error Page!");
@@ -17,6 +18,7 @@ export default function Home() {
 
       <section>
         <Products></Products>
+        <FunStats />
         <WhyChooseUs></WhyChooseUs>
         <AgeFilter></AgeFilter>
         <HowItWorks />
