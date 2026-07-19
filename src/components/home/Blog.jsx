@@ -12,7 +12,9 @@ const Blog = () => {
             image: "https://images.unsplash.com/photo-1515488042361-404e9250afef?q=80&w=600",
             date: "July 05, 2026",
             author: "Sarah Rahman",
-            category: "Toy Guide"
+            category: "Toy Guide",
+            themeColor: "hover:border-primary/30",
+            badgeColor: "bg-primary text-white"
         },
         {
             id: 2,
@@ -21,7 +23,9 @@ const Blog = () => {
             image: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=600",
             date: "June 28, 2026",
             author: "Dr. Anisur Ahmed",
-            category: "Child Safety"
+            category: "Child Safety",
+            themeColor: "hover:border-success/30",
+            badgeColor: "bg-success text-white"
         },
         {
             id: 3,
@@ -30,88 +34,100 @@ const Blog = () => {
             image: "https://images.unsplash.com/photo-1537655780520-1e392edd816a?q=80&w=600",
             date: "June 15, 2026",
             author: "Nabila Kabir",
-            category: "Parenting Tips"
+            category: "Parenting Tips",
+            themeColor: "hover:border-warning/30",
+            badgeColor: "bg-warning text-white"
         }
     ];
 
     return (
-        <div className="py-12 text-slate-800">
-            {/* Header Section */}
-            <div className="space-y-4 mx-auto mb-16 max-w-2xl text-center">
-                <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-bold text-primary text-sm">
-                    <FaChild /> Our Parenting Blog
+        <section className="bg-base-100 py-16 overflow-hidden">
+            <div className="mx-auto px-4 max-w-6xl container">
+                
+                {/* Header Section */}
+                <div className="mb-14 text-center">
+                    <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-black text-primary text-sm uppercase tracking-wider animate-pulse">
+                        <FaChild className="animate-bounce" /> Our Parenting Blog 📝
+                    </span>
+                    <h2 className="mt-4 font-black text-base-content text-3xl md:text-5xl leading-none tracking-tight">
+                        Insights, Tips & Guides <br />
+                        <span className="text-primary decoration-warning decoration-wavy underline">For Every Super Parent!</span>
+                    </h2>
+                    <p className="mx-auto mt-3 max-w-xl text-sm text-base-content/60 md:text-base">
+                        Explore our expert articles on early child development, toy safety standards, and fun learning activities to try right at home.
+                    </p>
                 </div>
-                <h1 className="font-black text-slate-900 text-3xl md:text-5xl leading-tight">
-                    Insights, Tips & Guides <br />
-                    <span className="text-primary">For Every Super Parent!</span>
-                </h1>
-                <p className="text-slate-500">
-                    Explore our expert articles on early child development, toy safety standards, and fun learning activities to try right at home.
-                </p>
-            </div>
 
-            {/* Blog Grid */}
-            <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {blogs.map((blog) => (
-                    <article 
-                        key={blog.id} 
-                        className="group flex flex-col justify-between bg-white shadow-sm hover:shadow-xl border border-slate-100 rounded-3xl overflow-hidden transition-all duration-300"
-                    >
-                        {/* Image Cover */}
-                        <div className="relative bg-slate-50 w-full aspect-[16/10] overflow-hidden">
-                            <span className="top-4 left-4 z-10 absolute bg-primary shadow-sm px-3 py-1 rounded-lg font-bold text-white text-xs">
-                                {blog.category}
-                            </span>
-                            <Image 
-                                src={blog.image} 
-                                alt={blog.title}
-                                fill
-                                sizes="(max-w-7xl) 33vw, 100vw"
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                        </div>
+                {/* Blog Grid */}
+                <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-2">
+                    {blogs.map((blog) => (
+                        <article 
+                            key={blog.id} 
+                            className={`group flex flex-col justify-between bg-base-100 hover:shadow-2xl border border-base-300/80 ${blog.themeColor} rounded-[2rem] p-4 transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 active:scale-[0.99] cursor-pointer card`}
+                        >
+                            {/* Image Frame with Asymmetric Playful Radius */}
+                            <div className="relative bg-base-200 shadow-inner rounded-[1.7rem] w-full aspect-[16/11] overflow-hidden">
+                                <span className={`top-4 left-4 z-10 absolute ${blog.badgeColor} shadow-md px-3.5 py-1.5 rounded-xl font-extrabold text-xs tracking-wide`}>
+                                    {blog.category}
+                                </span>
+                                <Image 
+                                    src={blog.image} 
+                                    alt={blog.title}
+                                    fill
+                                    sizes="(max-w-7xl) 33vw, 100vw"
+                                    className="object-cover group-hover:rotate-1 group-hover:scale-110 transition-transform duration-700 ease-out"
+                                />
+                            </div>
 
-                        {/* Card Content */}
-                        <div className="flex flex-col flex-grow justify-between space-y-5 p-6">
-                            <div className="space-y-3">
-                                {/* Meta Data */}
-                                <div className="flex items-center space-x-4 font-medium text-slate-400 text-xs">
-                                    <div className="flex items-center gap-1.5">
-                                        <FaCalendarAlt />
-                                        <span>{blog.date}</span>
+                            {/* Card Content */}
+                            <div className="flex flex-col flex-grow justify-between px-2 pt-5 pb-2">
+                                <div className="space-y-3">
+                                    {/* Meta Data */}
+                                    <div className="flex items-center space-x-4 font-bold text-xs text-base-content/50">
+                                        <div className="flex items-center gap-1.5 group-hover:text-primary transition-colors">
+                                            <FaCalendarAlt className="opacity-70" />
+                                            <span>{blog.date}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5">
+                                            <FaUser className="opacity-70" />
+                                            <span>{blog.author}</span>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <FaUser />
-                                        <span>{blog.author}</span>
-                                    </div>
+
+                                    {/* Title */}
+                                    <h3 className="font-black group-hover:text-primary text-base-content text-xl line-clamp-2 leading-snug tracking-tight transition-colors duration-200">
+                                        {blog.title}
+                                    </h3>
+
+                                    {/* Short Description */}
+                                    <p className="font-medium text-sm text-base-content/60 line-clamp-3 leading-relaxed">
+                                        {blog.desc}
+                                    </p>
                                 </div>
 
-                                {/* Title */}
-                                <h2 className="font-bold text-slate-900 group-hover:text-primary text-xl line-clamp-2 leading-snug transition-colors">
-                                    {blog.title}
-                                </h2>
+                                {/* Action Interactive Slide Button */}
+                                <div className="flex justify-between items-center mt-4 pt-5 border-base-200 border-t">
+                                    <Link 
+                                        href={`/blog/${blog.id}`}
+                                        className="group/btn inline-flex items-center gap-2 bg-base-200 hover:bg-primary py-2 pr-2 pl-4 rounded-full font-black hover:text-white text-xs text-base-content tracking-wider transition-all duration-300"
+                                    >
+                                        <span>Read Article</span>
+                                        <div className="bg-white group-hover/btn:bg-white shadow-sm p-2 rounded-full text-primary transition-colors">
+                                            <FaArrowRight className="text-xs transition-transform group-hover/btn:translate-x-0.5" />
+                                        </div>
+                                    </Link>
 
-                                {/* Short Description */}
-                                <p className="text-slate-500 text-sm line-clamp-3 leading-relaxed">
-                                    {blog.desc}
-                                </p>
+                                    {/* Cute decorative tiny tag */}
+                                    <span className="font-black group-hover:text-primary/20 text-base-content/15 text-2xl transition-colors select-none">
+                                        ✨
+                                    </span>
+                                </div>
                             </div>
-
-                            {/* Action Link */}
-                            <div className="pt-2">
-                                <Link 
-                                    href={`/blog/${blog.id}`}
-                                    className="group/link inline-flex items-center gap-2 font-bold text-primary hover:text-primary/80 text-sm transition-colors"
-                                >
-                                    Read Full Article
-                                    <FaArrowRight className="text-xs transition-transform group-hover/link:translate-x-1" />
-                                </Link>
-                            </div>
-                        </div>
-                    </article>
-                ))}
+                        </article>
+                    ))}
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 
