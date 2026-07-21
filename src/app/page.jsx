@@ -9,17 +9,22 @@ import HowItWorks from "@/components/home/HowItWorks";
 import FunStats from "@/components/home/FunStats";
 import VisualBadges from "@/components/home/VisualBadges";
 
-export default function Home() {
-  // throw new Error("Testing Hero Kidz Error Page!");
+import { getProducts } from "@/actions/product";
+
+export default async function Home() {
+  const products = (await getProducts()) || [];
+
   return (
     <div className="space-y-20">
       <section>
         <Banner></Banner>
       </section>
 
-      <section>
+      <section className="space-y-20">
         <VisualBadges />
-        <Products></Products>
+        
+        <Products initialProducts={products} />
+        
         <FunStats />
         <WhyChooseUs></WhyChooseUs>
         <AgeFilter></AgeFilter>
@@ -27,11 +32,6 @@ export default function Home() {
         <Testimonials />
         <Newsletter></Newsletter>
       </section>
-      
     </div>
   );
 }
-
-
-
-
