@@ -1,6 +1,6 @@
 "use server";
 
-import { collections, dbConnect } from "@/lib/mongo";
+import { dbConnect } from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
 
 export const postUser = async (payload) => {
@@ -12,13 +12,16 @@ export const postUser = async (payload) => {
             return { success: false, message: "All fields are required!" };
         }
 
-        // check user exist or not
-        const isExist = await dbConnect(collections.USERS).findOne({ email });
+        // 1. Get users collection instance
+        const usersCollection = await dbConnect("users");
+
+        // 2. Check if user already exists
+        const isExist = await usersCollection.findOne({ email });
         if (isExist) {
             return { success: false, message: "Email is already registered!" };
         }
 
-        // create user object
+        // 3. Create user object
         const newUser = {
             provider: "credentials",
             name, 
@@ -28,8 +31,8 @@ export const postUser = async (payload) => {
             createdAt: new Date(),
         };
 
-        // insert user into database
-        const result = await dbConnect(collections.USERS).insertOne(newUser);
+        // 4. Insert user into database
+        const result = await usersCollection.insertOne(newUser);
 
         if (result.acknowledged) {
             return {
