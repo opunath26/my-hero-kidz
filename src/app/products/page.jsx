@@ -1,5 +1,5 @@
-import Products from '@/components/home/Products';
 import { getProducts } from '@/actions/product';
+import Products from '@/components/home/Products';
 import React from 'react';
 
 export const metadata = {

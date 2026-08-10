@@ -2,104 +2,93 @@
 
 import React, { useState, useMemo } from 'react';
 import ProductCard from '../cards/ProductCard';
-import { FiSearch, FiFilter, FiPackage, FiGrid } from 'react-icons/fi';
+import { FiSearch, FiPackage, FiX, FiSliders } from 'react-icons/fi';
 import { FaChild } from 'react-icons/fa';
 
 const Products = ({ initialProducts = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('default');
-
-  const categories = useMemo(() => {
-    const cats = initialProducts.map(p => p.category).filter(Boolean);
-    return ['All', ...Array.from(new Set(cats))];
-  }, [initialProducts]);
 
   const filteredProducts = useMemo(() => {
     return initialProducts
       .filter((product) => {
-        const matchesSearch = product.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              product.name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+        const query = searchTerm.toLowerCase();
+        return (
+          product.title?.toLowerCase().includes(query) ||
+          product.name?.toLowerCase().includes(query) ||
+          product.description?.toLowerCase().includes(query)
+        );
       })
       .sort((a, b) => {
         if (sortBy === 'price-low') return (a.price || 0) - (b.price || 0);
         if (sortBy === 'price-high') return (b.price || 0) - (a.price || 0);
+        if (sortBy === 'rating') return (b.ratings || 0) - (a.ratings || 0);
         return 0; // Default order
       });
-  }, [initialProducts, searchTerm, selectedCategory, sortBy]);
+  }, [initialProducts, searchTerm, sortBy]);
 
   return (
-    <section className="bg-base-100 py-16 overflow-hidden">
+    <section className="bg-slate-50/50 py-12 md:py-16 min-h-screen">
       <div className="mx-auto px-4 max-w-7xl container">
         
         {/* Header Section */}
-        <div className="mb-12 text-center">
-          <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-black text-primary text-sm uppercase tracking-wider animate-pulse">
-            <FaChild className="animate-bounce" /> Explore Our Collection 🎁
+        <div className="mb-10 text-center">
+          <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-bold text-primary text-xs uppercase tracking-widest">
+            <FaChild className="text-sm" /> Hero Kids Collection 🎁
           </span>
-          <h2 className="mt-4 font-black text-base-content text-3xl md:text-5xl leading-none tracking-tight">
-            Discover Our <span className="text-primary decoration-warning decoration-wavy underline">Hero Toys</span>
+          <h2 className="mt-3 font-extrabold text-slate-900 text-3xl md:text-5xl tracking-tight">
+            Explore All <span className="text-primary">Hero Toys</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-base-content/60 md:text-base">
-            Carefully curated non-toxic, safe, and brain-boosting toys for your child's creative journey.
+          <p className="mx-auto mt-2 max-w-lg text-slate-500 text-sm md:text-base">
+            Discover safe, premium, and fun toys designed to bring smiles and inspire creativity.
           </p>
         </div>
 
-        {/* Filter and Control Bar */}
-        <div className="bg-base-200/50 shadow-sm mb-12 p-4 md:p-6 border border-base-300/80 rounded-[2rem]">
+        {/* Filter and Search Bar */}
+        <div className="bg-white shadow-sm mb-8 p-4 md:p-5 border border-slate-200/80 rounded-2xl">
           <div className="flex md:flex-row flex-col justify-between items-center gap-4">
             
-            {/* Search Box */}
-            <div className="relative w-full md:w-80">
-              <span className="top-1/2 left-4 absolute text-base-content/40 -translate-y-1/2">
+            {/* Search Input */}
+            <div className="relative w-full md:w-96">
+              <span className="top-1/2 left-4 absolute text-slate-400 -translate-y-1/2">
                 <FiSearch className="w-5 h-5" />
               </span>
               <input
                 type="text"
-                placeholder="Search favorite toys..."
+                placeholder="Search toys by name or keyword..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-base-100 shadow-inner py-3 pr-4 pl-12 border-2 border-transparent focus:border-primary/40 rounded-2xl focus:outline-none w-full font-bold text-sm text-base-content transition-all placeholder-gray-400/80"
+                className="bg-slate-50 focus:bg-white py-2.5 pr-10 pl-11 border border-slate-200 focus:border-primary/50 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               />
-            </div>
-
-            {/* Category Filter Badges (Horizontal Scroll on Mobile) */}
-            <div className="flex items-center gap-2 pb-2 md:pb-0 w-full md:w-auto overflow-x-auto scrollbar-none">
-              <span className="hidden lg:inline-block mr-2 font-black text-xs text-base-content/40 uppercase tracking-widest">
-                <FiFilter className="inline mr-1" /> Category:
-              </span>
-              {categories.map((cat) => (
+              {searchTerm && (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition-all duration-300 active:scale-95 ${
-                    selectedCategory === cat
-                      ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105'
-                      : 'bg-base-100 hover:bg-base-300/60 text-base-content/70 border border-base-300/50'
-                  }`}
+                  onClick={() => setSearchTerm('')}
+                  className="top-1/2 right-3 absolute text-slate-400 hover:text-slate-600 -translate-y-1/2"
                 >
-                  {cat}
+                  <FiX className="w-4 h-4" />
                 </button>
-              ))}
+              )}
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="flex justify-between md:justify-end items-center gap-3 w-full md:w-auto">
-              <span className="bg-base-300/50 px-3 py-2 rounded-xl font-bold text-xs text-base-content/60">
-                Showing: <strong className="text-primary">{filteredProducts.length}</strong> Products
+            {/* Sort & Count Controls */}
+            <div className="flex sm:flex-row flex-col justify-between sm:items-center gap-3 w-full md:w-auto">
+              <span className="font-semibold text-slate-500 text-xs">
+                Showing <strong className="text-slate-900">{filteredProducts.length}</strong> of {initialProducts.length} items
               </span>
               
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-base-100 border-base-300 rounded-xl focus:outline-none font-bold text-xs select-sm select"
-              >
-                <option value="default">Sort by: Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <FiSliders className="text-slate-400 text-sm" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-slate-50 hover:bg-slate-100/80 px-3 py-2 border border-slate-200 rounded-xl focus:outline-none font-semibold text-slate-700 text-xs transition-colors cursor-pointer"
+                >
+                  <option value="default">Sort by: Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Top Rated</option>
+                </select>
+              </div>
             </div>
 
           </div>
@@ -113,24 +102,23 @@ const Products = ({ initialProducts = [] }) => {
             ))}
           </div>
         ) : (
-          /* Empty State when no product matches search/filter */
-          <div className="bg-base-200/20 my-8 py-20 border-2 border-base-300 border-dashed rounded-[2.5rem] text-center">
-            <div className="flex justify-center items-center bg-primary/10 mx-auto mb-4 rounded-full w-20 h-20 text-primary text-3xl">
+          /* Empty State */
+          <div className="bg-white my-8 py-16 border border-slate-200 border-dashed rounded-3xl text-center">
+            <div className="flex justify-center items-center bg-primary/10 mx-auto mb-4 rounded-2xl w-16 h-16 text-primary text-2xl">
               <FiPackage />
             </div>
-            <h3 className="font-extrabold text-base-content text-2xl">No Hero Toys Found!</h3>
-            <p className="mx-auto mt-1 max-w-sm text-sm text-base-content/60">
-              We couldn't find anything matching your search or category filter. Try clearing your filters!
+            <h3 className="font-bold text-slate-800 text-xl">No Toys Found</h3>
+            <p className="mx-auto mt-1 max-w-xs text-slate-500 text-sm">
+              We couldn't find any products matching "{searchTerm}". Try searching with a different term.
             </p>
             <button
               onClick={() => {
                 setSearchTerm('');
-                setSelectedCategory('All');
                 setSortBy('default');
               }}
-              className="shadow-md mt-6 px-6 rounded-xl font-black text-white btn btn-primary btn-sm"
+              className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 mt-5 px-5 py-2.5 rounded-xl font-semibold text-white text-xs transition-all"
             >
-              Reset Filters
+              Clear Search
             </button>
           </div>
         )}
