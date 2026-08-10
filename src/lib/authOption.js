@@ -5,13 +5,10 @@ import { dbConnect } from "@/lib/dbConnect";
 
 export const authOptions = {
   providers: [
-    // ১. Google Provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-
-    // ২. Credentials Provider
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -25,7 +22,6 @@ export const authOptions = {
           throw new Error("Please fill in all fields");
         }
 
-        // dbConnect("users") সরাসরি কালেকশন ইনস্ট্যান্স দেয়
         const usersCollection = await dbConnect("users");
         const user = await usersCollection.findOne({ email });
 
@@ -43,6 +39,7 @@ export const authOptions = {
           name: user.name,
           email: user.email,
           role: user.role || "user",
+          image: user.image || null,
         };
       },
     }),
@@ -51,13 +48,44 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (account.provider === "google") {
+        try {
+          const usersCollection = await dbConnect("users");
+          const isExist = await usersCollection.findOne({ email: user.email });
+
+          if (!isExist) {
+            await usersCollection.insertOne({
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              provider: "google",
+              role: "user",
+              createdAt: new Date(),
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Error saving Google user:", error);
+          return false;
+        }
+      }
+      return true;
+    },
+
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.role = user.role || "user";
-        token.id = user.id;
+        const usersCollection = await dbConnect("users");
+        const dbUser = await usersCollection.findOne({ email: user.email });
+        
+        if (dbUser) {
+          token.role = dbUser.role || "user";
+          token.id = dbUser._id.toString();
+        }
       }
       return token;
     },
+
     async session({ session, token }) {
       if (token) {
         session.user.role = token.role;
