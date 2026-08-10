@@ -1,7 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { getSingleProduct } from '@/actions/product';
+import { getSingleProduct, getRelatedProducts } from '@/actions/product';
 import { FaShoppingBag, FaStar } from 'react-icons/fa';
+import RelatedProducts from '@/components/products/RelatedProducts';
 
 export const generateMetadata = async ({ params }) => {
     const { id } = await params;
@@ -57,12 +58,22 @@ const ProductDetailsPage = async ({ params }) => {
         );
     }
 
-    const { title, image, price, discount, ratings, description } = product;
+    const { title, image, price, discount, ratings, description, category } = product;
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
 
+    let relatedProducts = [];
+    try {
+        if (typeof getRelatedProducts === 'function') {
+            relatedProducts = await getRelatedProducts(category, id);
+        }
+    } catch (error) {
+        console.error("Error loading related products:", error);
+    }
+
     return (
         <div className="mx-auto my-12 px-4 max-w-7xl">
+            {/* Main Product Details Section */}
             <div className="gap-10 grid grid-cols-1 md:grid-cols-2 bg-white shadow-sm p-6 md:p-10 border border-slate-100 rounded-3xl">
                 
                 <div className="relative flex justify-center items-center bg-slate-50 p-6 rounded-2xl w-full aspect-square overflow-hidden">
@@ -117,6 +128,11 @@ const ProductDetailsPage = async ({ params }) => {
                     </div>
                 </div>
 
+            </div>
+
+            {/* Related Products Slider Section */}
+            <div className="mt-16">
+                <RelatedProducts products={relatedProducts} />
             </div>
         </div>
     );
