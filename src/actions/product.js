@@ -38,8 +38,8 @@ export const getSingleProduct = async (id) => {
     }
 };
 
-export const getRelatedProducts = async (category, currentProductId) => {
-    if (!category || !currentProductId || currentProductId.length !== 24) {
+export const getRelatedProducts = async (currentProductId) => {
+    if (!currentProductId || currentProductId.length !== 24) {
         return [];
     }
 
@@ -47,7 +47,6 @@ export const getRelatedProducts = async (category, currentProductId) => {
         const db = await dbConnect(collection.PRODUCTS);
         
         const query = {
-            category: category,
             _id: { $ne: new ObjectId(currentProductId) }
         };
 

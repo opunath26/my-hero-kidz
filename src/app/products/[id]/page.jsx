@@ -58,14 +58,14 @@ const ProductDetailsPage = async ({ params }) => {
         );
     }
 
-    const { title, image, price, discount, ratings, description, category } = product;
+    const { title, image, price, discount, ratings, description } = product;
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
 
     let relatedProducts = [];
     try {
         if (typeof getRelatedProducts === 'function') {
-            relatedProducts = await getRelatedProducts(category, id);
+            relatedProducts = await getRelatedProducts(id);
         }
     } catch (error) {
         console.error("Error loading related products:", error);
