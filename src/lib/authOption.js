@@ -1,9 +1,17 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/dbConnect";
 
 export const authOptions = {
   providers: [
+    // ১. Google Provider
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+
+    // ২. Credentials Provider
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -17,8 +25,9 @@ export const authOptions = {
           throw new Error("Please fill in all fields");
         }
 
-        const db = await dbConnect();
-        const user = await db.collection("users").findOne({ email });
+        // dbConnect("users") সরাসরি কালেকশন ইনস্ট্যান্স দেয়
+        const usersCollection = await dbConnect("users");
+        const user = await usersCollection.findOne({ email });
 
         if (!user) {
           throw new Error("No user found with this email");
@@ -44,7 +53,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
+        token.role = user.role || "user";
         token.id = user.id;
       }
       return token;
