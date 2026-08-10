@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
+import AuthProvider from "@/components/auth/AuthProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -61,19 +62,19 @@ export default function RootLayout({ children }) {
       className={`${poppins.className} antialiased`}
     >
       <body className="flex flex-col min-h-screen"> 
-        
-        <header className="mx-auto px-4 md:px-0 py-2 w-full md:w-11/12">
-          <Navbar />
-        </header>
-        
-        <main className="flex-grow mx-auto px-4 md:px-0 py-2 w-full md:w-11/12 min-h-[calc(100vh-120px)]"> 
-          {children}
-        </main>
+        <AuthProvider>
+          <header className="mx-auto px-4 md:px-0 py-2 w-full md:w-11/12">
+            <Navbar />
+          </header>
+          
+          <main className="flex-grow mx-auto px-4 md:px-0 py-2 w-full md:w-11/12 min-h-[calc(100vh-120px)]"> 
+            {children}
+          </main>
 
-        <footer className="mt-auto w-full">
-          <Footer />
-        </footer>
-
+          <footer className="mt-auto w-full">
+            <Footer />
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );
