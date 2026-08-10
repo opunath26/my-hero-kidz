@@ -37,3 +37,28 @@ export const getSingleProduct = async (id) => {
         return {};
     }
 };
+
+export const getRelatedProducts = async (category, currentProductId) => {
+    if (!category || !currentProductId || currentProductId.length !== 24) {
+        return [];
+    }
+
+    try {
+        const db = await dbConnect(collection.PRODUCTS);
+        
+        const query = {
+            category: category,
+            _id: { $ne: new ObjectId(currentProductId) }
+        };
+
+        const products = await db.find(query).limit(8).toArray();
+
+        return products.map(product => ({
+            ...product,
+            _id: product._id.toString()
+        }));
+    } catch (error) {
+        console.error("Error fetching related products:", error);
+        return [];
+    }
+};
