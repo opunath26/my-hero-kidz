@@ -1,10 +1,16 @@
+"use client";
+
 import React from 'react';
 import Logo from './Logo';
 import Link from 'next/link';
+import Image from 'next/image';
 import NavLink from '../buttons/NavLink';
-import { FiShoppingCart, FiUser } from "react-icons/fi";
+import { useSession, signOut } from 'next-auth/react';
+import { FiShoppingCart, FiUser, FiLogOut } from "react-icons/fi";
 
 const Navbar = () => {
+    const { data: session, status } = useSession();
+
     const nav = (
         <>
             <li>
@@ -32,6 +38,7 @@ const Navbar = () => {
                     
                     {/* Navbar Start */}
                     <div className="gap-2 navbar-start">
+                        {/* Mobile Menu Dropdown */}
                         <div className="dropdown">
                             <div 
                                 tabIndex={0} 
@@ -61,8 +68,8 @@ const Navbar = () => {
                     </div>
 
                     {/* Navbar End */}
-                    <div className="flex justify-end items-center gap-3 navbar-end">
-                        {/* Shopping Cart Button with Counter Badge */}
+                    <div className="flex justify-end items-center gap-2 sm:gap-3 navbar-end">
+                        {/* Shopping Cart Button */}
                         <Link href={"/cart"}>
                             <button className="group relative bg-primary/10 hover:bg-primary text-primary hover:text-white active:scale-90 transition-all duration-300 btn btn-circle btn-ghost">
                                 <FiShoppingCart className="text-xl group-hover:animate-bounce" />
@@ -72,13 +79,60 @@ const Navbar = () => {
                             </button>
                         </Link>
 
-                        {/* Login Button */}
-                        <Link href={"/login"}>
-                            <button className="flex items-center gap-2 shadow-md shadow-primary/20 px-6 rounded-full font-black text-white hover:scale-105 active:scale-95 transition-all duration-200 btn btn-primary">
-                                <FiUser className="text-base" />
-                                <span>Login</span>
-                            </button>
-                        </Link>
+                        {/* Authentication State Check */}
+                        {status === "loading" ? (
+                            <span className="text-primary loading-spinner loading-md loading"></span>
+                        ) : session?.user ? (
+                            /* User Profile Dropdown when logged in */
+                            <div className="dropdown dropdown-end">
+                                <div 
+                                    tabIndex={0} 
+                                    role="button" 
+                                    className="border-2 border-primary/30 hover:border-primary active:scale-95 transition-all avatar btn btn-circle btn-ghost"
+                                >
+                                    <div className="relative rounded-full w-10">
+                                        {session.user.image ? (
+                                            <Image 
+                                                src={session.user.image} 
+                                                alt={session.user.name || "User Avatar"} 
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex justify-center items-center bg-primary/10 w-full h-full font-bold text-primary">
+                                                {session.user.name ? session.user.name.charAt(0).toUpperCase() : <FiUser className="text-lg" />}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <ul 
+                                    tabIndex={0} 
+                                    className="z-50 space-y-2 bg-base-100 shadow-2xl backdrop-blur-lg mt-3 p-4 border border-base-200 rounded-2xl w-60 dropdown-content"
+                                >
+                                    <li className="px-2 py-1 border-base-200 border-b">
+                                        <p className="font-bold text-sm text-base-content truncate">{session.user.name || "User"}</p>
+                                        <p className="text-zinc-500 text-xs truncate">{session.user.email}</p>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            onClick={() => signOut({ callbackUrl: "/login" })}
+                                            className="flex items-center gap-2 hover:bg-error/10 py-2.5 rounded-xl w-full font-bold text-error text-sm transition-all"
+                                        >
+                                            <FiLogOut className="text-base" />
+                                            <span>Sign Out</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        ) : (
+                            /* Login Button when not logged in */
+                            <Link href={"/login"}>
+                                <button className="flex items-center gap-2 shadow-md shadow-primary/20 px-4 sm:px-6 rounded-full font-black text-white text-sm sm:text-base hover:scale-105 active:scale-95 transition-all duration-200 btn btn-primary">
+                                    <FiUser className="text-base" />
+                                    <span>Login</span>
+                                </button>
+                            </Link>
+                        )}
                     </div>
 
                 </div>
