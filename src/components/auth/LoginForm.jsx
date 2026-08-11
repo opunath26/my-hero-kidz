@@ -4,14 +4,19 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { FaEnvelope, FaLock, FaCheckCircle } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaCheckCircle, FaSpinner } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const [error, setError] = useState("");
     const [showSuccessToast, setShowSuccessToast] = useState(false);
     const router = useRouter();
 
+    const isAnyLoading = loading || googleLoading || showSuccessToast;
+
+    // Email/Password Login
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -40,9 +45,21 @@ const LoginForm = () => {
         }
     };
 
+    // Google Login Handler
+    const handleGoogleLogin = async () => {
+        setGoogleLoading(true);
+        setError("");
+        try {
+            await signIn("google", { callbackUrl: "/" });
+        } catch (err) {
+            setGoogleLoading(false);
+            setError("Google sign-in failed. Please try again.");
+        }
+    };
+
     return (
         <div className="relative w-full">
-            {/*  Top Animated Success Toast / Popup */}
+            {/* Top Animated Success Toast */}
             {showSuccessToast && (
                 <div className="top-5 right-5 left-5 z-50 fixed flex justify-center items-center animate-bounce pointer-events-none">
                     <div className="flex items-center gap-3 bg-slate-900/90 shadow-2xl backdrop-blur-md px-5 py-3.5 border border-emerald-500/30 rounded-2xl text-white">
@@ -62,6 +79,7 @@ const LoginForm = () => {
                     </div>
                 )}
 
+                {/* Email Input */}
                 <div className="space-y-1">
                     <label className="font-semibold text-slate-700 text-sm">Email Address</label>
                     <div className="relative flex items-center">
@@ -70,12 +88,14 @@ const LoginForm = () => {
                             name="email"
                             type="email" 
                             placeholder="Enter your email" 
-                            className="bg-slate-50 focus:bg-white py-3.5 pr-4 pl-11 border border-slate-200 focus:border-primary rounded-2xl focus:outline-none w-full text-slate-800 text-sm transition-all placeholder-slate-400"
+                            disabled={isAnyLoading}
+                            className="bg-slate-50 focus:bg-white disabled:opacity-60 py-3.5 pr-4 pl-11 border border-slate-200 focus:border-primary rounded-2xl focus:outline-none w-full text-slate-800 text-sm transition-all placeholder-slate-400"
                             required
                         />
                     </div>
                 </div>
 
+                {/* Password Input */}
                 <div className="space-y-1">
                     <div className="flex justify-between items-center">
                         <label className="font-semibold text-slate-700 text-sm">Password</label>
@@ -89,20 +109,59 @@ const LoginForm = () => {
                             name="password"
                             type="password" 
                             placeholder="Enter your password" 
-                            className="bg-slate-50 focus:bg-white py-3.5 pr-4 pl-11 border border-slate-200 focus:border-primary rounded-2xl focus:outline-none w-full text-slate-800 text-sm transition-all placeholder-slate-400"
+                            disabled={isAnyLoading}
+                            className="bg-slate-50 focus:bg-white disabled:opacity-60 py-3.5 pr-4 pl-11 border border-slate-200 focus:border-primary rounded-2xl focus:outline-none w-full text-slate-800 text-sm transition-all placeholder-slate-400"
                             required
                         />
                     </div>
                 </div>
 
+                {/* Submit Button */}
                 <button 
                     type="submit" 
-                    disabled={loading || showSuccessToast}
-                    className="bg-primary hover:bg-primary/90 disabled:opacity-50 shadow-lg shadow-primary/10 mt-2 py-3.5 rounded-2xl w-full font-bold text-white text-base active:scale-[0.98] transition-all"
+                    disabled={isAnyLoading}
+                    className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-60 shadow-lg shadow-primary/10 mt-2 py-3.5 rounded-2xl w-full font-bold text-white text-base active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
                 >
-                    {loading ? "Signing in..." : showSuccessToast ? "Success!" : "Sign In"}
+                    {loading ? (
+                        <>
+                            <FaSpinner className="text-lg animate-spin" />
+                            <span>Signing in...</span>
+                        </>
+                    ) : showSuccessToast ? (
+                        "Success!"
+                    ) : (
+                        "Sign In"
+                    )}
                 </button>
             </form>
+
+            {/* Divider */}
+            <div className="relative flex justify-center items-center my-6">
+                <div className="border-slate-200 border-t w-full"></div>
+                <span className="top-1/2 absolute bg-white px-3 font-semibold text-slate-400 text-xs -translate-y-1/2">
+                    OR
+                </span>
+            </div>
+
+            {/* Google Sign In Button */}
+            <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={isAnyLoading}
+                className="flex justify-center items-center gap-3 bg-slate-50 hover:bg-slate-100 disabled:opacity-60 py-3.5 border border-slate-200 rounded-2xl w-full font-semibold text-slate-700 text-sm active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
+            >
+                {googleLoading ? (
+                    <>
+                        <FaSpinner className="text-primary text-lg animate-spin" />
+                        <span>Connecting to Google...</span>
+                    </>
+                ) : (
+                    <>
+                        <FcGoogle className="text-xl" />
+                        <span>Continue with Google</span>
+                    </>
+                )}
+            </button>
         </div>
     );
 };
