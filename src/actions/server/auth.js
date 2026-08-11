@@ -5,7 +5,8 @@ import bcrypt from "bcryptjs";
 
 export const postUser = async (payload) => {
     try {
-        const { email, password, name } = payload;
+       
+        const { email, password, name, image } = payload;
 
         // payload check
         if (!email || !password || !name) {
@@ -27,6 +28,7 @@ export const postUser = async (payload) => {
             name, 
             email, 
             password: await bcrypt.hash(password, 10),
+            image: image || null,
             role: "user",
             createdAt: new Date(),
         };

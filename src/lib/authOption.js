@@ -73,7 +73,7 @@ export const authOptions = {
       return true;
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         const usersCollection = await dbConnect("users");
         const dbUser = await usersCollection.findOne({ email: user.email });
@@ -81,6 +81,7 @@ export const authOptions = {
         if (dbUser) {
           token.role = dbUser.role || "user";
           token.id = dbUser._id.toString();
+          token.picture = dbUser.image || user.image || null;
         }
       }
       return token;
@@ -90,6 +91,7 @@ export const authOptions = {
       if (token) {
         session.user.role = token.role;
         session.user.id = token.id;
+        session.user.image = token.picture;
       }
       return session;
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from './Logo';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,6 +10,7 @@ import { FiShoppingCart, FiUser, FiLogOut } from "react-icons/fi";
 
 const Navbar = () => {
     const { data: session, status } = useSession();
+    const [imageError, setImageError] = useState(false);
 
     const nav = (
         <>
@@ -90,16 +91,18 @@ const Navbar = () => {
                                     role="button" 
                                     className="border-2 border-primary/30 hover:border-primary active:scale-95 transition-all avatar btn btn-circle btn-ghost"
                                 >
-                                    <div className="relative rounded-full w-10">
-                                        {session.user.image ? (
+                                    <div className="relative flex justify-center items-center bg-primary/10 rounded-full w-10 h-10 overflow-hidden">
+                                        {session.user.image && !imageError ? (
                                             <Image 
                                                 src={session.user.image} 
                                                 alt={session.user.name || "User Avatar"} 
                                                 fill
+                                                unoptimized
+                                                onError={() => setImageError(true)}
                                                 className="object-cover"
                                             />
                                         ) : (
-                                            <div className="flex justify-center items-center bg-primary/10 w-full h-full font-bold text-primary">
+                                            <div className="flex justify-center items-center w-full h-full font-bold text-primary text-sm">
                                                 {session.user.name ? session.user.name.charAt(0).toUpperCase() : <FiUser className="text-lg" />}
                                             </div>
                                         )}
