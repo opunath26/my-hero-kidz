@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { postUser } from "@/actions/server/auth";
+import { signIn } from "next-auth/react";
 import { FaUser, FaEnvelope, FaLock, FaCamera, FaTrash } from "react-icons/fa";
 import Image from "next/image";
 
@@ -79,11 +80,23 @@ const RegisterForm = () => {
       password,
     });
 
-    setLoading(false);
-
     if (res?.success) {
-      router.push("/login");
+      const loginRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      setLoading(false);
+
+      if (loginRes?.ok) {
+        router.push("/");
+        router.refresh();
+      } else {
+        setError("Registration successful, but automatic login failed. Please login manually.");
+      }
     } else {
+      setLoading(false);
       setError(res?.message || "Registration failed");
     }
   };
