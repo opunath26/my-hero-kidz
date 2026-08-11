@@ -2,8 +2,9 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getSingleProduct, getRelatedProducts } from '@/actions/product';
-import { FaShoppingBag, FaStar, FaTruck, FaShieldAlt, FaUndo, FaChevronRight, FaBolt } from 'react-icons/fa';
+import { FaStar, FaTruck, FaShieldAlt, FaUndo, FaChevronRight } from 'react-icons/fa';
 import RelatedProducts from '@/components/products/RelatedProducts';
+import AddToCartSection from '@/components/products/AddToCartSection';
 
 export const generateMetadata = async ({ params }) => {
     const { id } = await params;
@@ -160,19 +161,11 @@ const ProductDetailsPage = async ({ params }) => {
 
                                 <hr className="border-slate-100" />
 
-                                {/* Action Buttons */}
-                                <div className="space-y-3 pt-2">
-                                    <div className="flex sm:flex-row flex-col gap-3">
-                                        <button className="flex flex-1 justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25 py-3.5 rounded-xl font-bold text-white text-base active:scale-[0.99] transition-all">
-                                            <FaShoppingBag className="text-lg" />
-                                            Add to Cart
-                                        </button>
-                                        <button className="flex flex-1 justify-center items-center gap-2 bg-slate-900 hover:bg-slate-800 shadow-lg shadow-slate-900/10 py-3.5 rounded-xl font-bold text-white text-base active:scale-[0.99] transition-all">
-                                            <FaBolt className="text-amber-400 text-lg" />
-                                            Buy Now
-                                        </button>
-                                    </div>
-                                </div>
+                                {/* Action Buttons Component */}
+                                <AddToCartSection 
+                                    product={{ ...product, discountedPrice }} 
+                                    inStock={inStock} 
+                                />
                             </div>
 
                             {/* Trust Badges */}
