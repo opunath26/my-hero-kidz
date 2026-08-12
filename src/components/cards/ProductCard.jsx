@@ -1,15 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag, FaEye } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag, FaEye, FaSpinner } from 'react-icons/fa';
 
 const ProductCard = ({ product }) => {
     const { _id, title, image, price, discount, ratings, reviews, sold } = product;
 
+    const [loading, setLoading] = useState(false);
     const { data: session } = useSession();
     const router = useRouter();
     const pathname = usePathname();
@@ -17,14 +18,43 @@ const ProductCard = ({ product }) => {
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
 
-    // Add to Cart Handler
-    const handleAddToCart = () => {
+    // Add to Cart Handler with Database Integration
+    const handleAddToCart = async () => {
         if (!session) {
             router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
             return;
         }
 
-        console.log("Adding to cart:", _id);
+        setLoading(true);
+
+        try {
+            const res = await fetch("/api/cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    productId: _id,
+                    title,
+                    image,
+                    price: discountedPrice,
+                    quantity: 1,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert("Product added to cart!");
+            } else {
+                alert(data.message || "Failed to add product");
+            }
+        } catch (error) {
+            console.error("Cart error:", error);
+            alert("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const renderStars = (rating) => {
@@ -99,10 +129,15 @@ const ProductCard = ({ product }) => {
 
                         <button 
                             onClick={handleAddToCart}
-                            className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-md shadow-primary/20 py-3 rounded-2xl font-black text-white text-xs active:scale-95 transition-all duration-200 cursor-pointer"
+                            disabled={loading}
+                            className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-60 shadow-md shadow-primary/20 py-3 rounded-2xl font-black text-white text-xs active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
                         >
-                            <FaShoppingBag className="text-sm" />
-                            <span>Add</span>
+                            {loading ? (
+                                <FaSpinner className="text-sm animate-spin" />
+                            ) : (
+                                <FaShoppingBag className="text-sm" />
+                            )}
+                            <span>{loading ? "Adding..." : "Add"}</span>
                         </button>
                     </div>
                 </div>
