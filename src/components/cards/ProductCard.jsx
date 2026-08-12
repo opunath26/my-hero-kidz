@@ -1,13 +1,31 @@
+"use client";
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter, usePathname } from 'next/navigation';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag, FaEye } from 'react-icons/fa';
 
 const ProductCard = ({ product }) => {
     const { _id, title, image, price, discount, ratings, reviews, sold } = product;
 
+    const { data: session } = useSession();
+    const router = useRouter();
+    const pathname = usePathname();
+
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
+
+    // Add to Cart Handler
+    const handleAddToCart = () => {
+        if (!session) {
+            router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
+            return;
+        }
+
+        console.log("Adding to cart:", _id);
+    };
 
     const renderStars = (rating) => {
         const stars = [];
@@ -24,7 +42,7 @@ const ProductCard = ({ product }) => {
     };
 
     return (
-        <div className="group flex flex-col justify-between bg-base-100 hover:bg-base-100/90 shadow-sm hover:shadow-2xl border border-base-300/80 hover:border-primary/30 rounded-[2rem] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:rotate-1 cursor-pointer card">
+        <div className="group flex flex-col justify-between bg-base-100 hover:bg-base-100/90 shadow-sm hover:shadow-2xl border border-base-300/80 hover:border-primary/30 rounded-[2rem] overflow-hidden hover:rotate-1 transition-all hover:-translate-y-2 duration-300 cursor-pointer card">
             
             {/* Image Container with Discount Badge */}
             <div className="relative bg-base-200/50 rounded-t-[2rem] w-full aspect-square overflow-hidden">
@@ -46,7 +64,7 @@ const ProductCard = ({ product }) => {
             {/* Product Info Section */}
             <div className="flex flex-col flex-grow justify-between space-y-4 p-5">
                 <div className="space-y-2">
-                    <h3 className="min-h-[48px] font-extrabold text-base-content group-hover:text-primary text-base line-clamp-2 leading-snug tracking-tight transition-colors duration-200">
+                    <h3 className="min-h-[48px] font-extrabold group-hover:text-primary text-base text-base-content line-clamp-2 leading-snug tracking-tight transition-colors duration-200">
                         {title}
                     </h3>
 
@@ -66,20 +84,23 @@ const ProductCard = ({ product }) => {
                     <div className="flex items-baseline space-x-2">
                         <span className="font-black text-primary text-2xl tracking-tight">৳{discountedPrice}</span>
                         {hasDiscount && (
-                            <span className="font-bold text-base-content/40 text-sm line-through">৳{price}</span>
+                            <span className="font-bold text-sm text-base-content/40 line-through">৳{price}</span>
                         )}
                     </div>
 
                     <div className="gap-2.5 grid grid-cols-2">
                         <Link 
                             href={`/products/${_id}`}
-                            className="flex justify-center items-center gap-2 bg-base-200 hover:bg-base-300 py-3 rounded-2xl font-black text-base-content text-xs active:scale-95 transition-all duration-200"
+                            className="flex justify-center items-center gap-2 bg-base-200 hover:bg-base-300 py-3 rounded-2xl font-black text-xs text-base-content active:scale-95 transition-all duration-200"
                         >
-                            <FaEye className="text-sm opacity-70" />
+                            <FaEye className="opacity-70 text-sm" />
                             <span>Details</span>
                         </Link>
 
-                        <button className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-md shadow-primary/20 py-3 rounded-2xl font-black text-white text-xs active:scale-95 transition-all duration-200">
+                        <button 
+                            onClick={handleAddToCart}
+                            className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-md shadow-primary/20 py-3 rounded-2xl font-black text-white text-xs active:scale-95 transition-all duration-200 cursor-pointer"
+                        >
                             <FaShoppingBag className="text-sm" />
                             <span>Add</span>
                         </button>
