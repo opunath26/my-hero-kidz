@@ -2,11 +2,16 @@
 
 import React from 'react';
 import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 
 const SocialButton = () => {
+    const searchParams = useSearchParams();
+
+    const redirectTo = searchParams.get('redirectTo') || "/";
+
     const handleSocialLogin = (provider) => {
-        signIn(provider, { callbackUrl: "/" });
+        signIn(provider, { callbackUrl: redirectTo });
     };
 
     return (

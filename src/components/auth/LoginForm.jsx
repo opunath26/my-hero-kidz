@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FaEnvelope, FaLock, FaCheckCircle, FaSpinner } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -12,7 +12,11 @@ const LoginForm = () => {
     const [googleLoading, setGoogleLoading] = useState(false);
     const [error, setError] = useState("");
     const [showSuccessToast, setShowSuccessToast] = useState(false);
+    
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const redirectTo = searchParams.get('redirectTo') || "/";
 
     const isAnyLoading = loading || googleLoading || showSuccessToast;
 
@@ -39,7 +43,7 @@ const LoginForm = () => {
             setShowSuccessToast(true);
 
             setTimeout(() => {
-                router.push("/");
+                router.push(redirectTo);
                 router.refresh();
             }, 1500);
         }
@@ -50,7 +54,7 @@ const LoginForm = () => {
         setGoogleLoading(true);
         setError("");
         try {
-            await signIn("google", { callbackUrl: "/" });
+            await signIn("google", { callbackUrl: redirectTo });
         } catch (err) {
             setGoogleLoading(false);
             setError("Google sign-in failed. Please try again.");

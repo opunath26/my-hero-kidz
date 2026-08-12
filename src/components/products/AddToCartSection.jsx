@@ -1,38 +1,60 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { FaShoppingBag, FaBolt, FaSpinner } from 'react-icons/fa';
 
 const AddToCartSection = ({ product, inStock }) => {
+    const router = useRouter();
+    const pathname = usePathname();
+    const { data: session, status } = useSession();
+
     const [loading, setLoading] = useState(false);
     const [buyNowLoading, setBuyNowLoading] = useState(false);
 
+    const checkAuthAndRedirect = () => {
+        const isAuthenticated = status === "authenticated";
+
+        if (!isAuthenticated) {
+            router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
+            return false;
+        }
+        return true;
+    };
+
+    //  Add to Cart Handler
     const handleAddToCart = async () => {
         if (!inStock) return;
-        setLoading(true);
         
+        if (!checkAuthAndRedirect()) return;
+
+        setLoading(true);
         try {
-            console.log("Added to cart:", product);
+            console.log("Adding to cart:", product);
             
             await new Promise((resolve) => setTimeout(resolve, 800));
         } catch (error) {
-            console.error("Failed to add to cart:", error);
+            console.error("Cart error:", error);
         } finally {
             setLoading(false);
         }
     };
 
-    // Buy Now Handler
+    //  Buy Now Handler
     const handleBuyNow = async () => {
         if (!inStock) return;
+
+        if (!checkAuthAndRedirect()) return;
+
         setBuyNowLoading(true);
-        
         try {
-            console.log("Buy now pressed for:", product);
+            console.log("Buying now:", product);
             
             await new Promise((resolve) => setTimeout(resolve, 800));
+            router.push('/checkout');
         } catch (error) {
-            console.error("Buy now failed:", error);
+            console.error("Buy now error:", error);
         } finally {
             setBuyNowLoading(false);
         }
