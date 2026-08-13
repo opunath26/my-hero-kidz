@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
       <body className="flex flex-col min-h-screen"> 
         <AuthProvider>
           <CartProvider>
-            <Toaster position="top-center" reverseOrder={false} />
+            <Toaster position="top-right" reverseOrder={false} />
             <header className="mx-auto px-4 md:px-0 py-2 w-full md:w-11/12">
               <Navbar />
             </header>

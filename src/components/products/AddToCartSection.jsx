@@ -16,11 +16,32 @@ const AddToCartSection = ({ product, inStock }) => {
     const [loading, setLoading] = useState(false);
     const [buyNowLoading, setBuyNowLoading] = useState(false);
 
+    // Toast Custom Styles (Matching Brand Orange Theme)
+    const successToastStyle = {
+        borderRadius: '12px',
+        background: '#ea580c', // Orange Theme
+        color: '#fff',
+        fontWeight: 'bold',
+        padding: '12px 20px',
+        boxShadow: '0 10px 15px -3px rgba(234, 88, 12, 0.3)',
+    };
+
+    const errorToastStyle = {
+        borderRadius: '12px',
+        background: '#ef4444',
+        color: '#fff',
+        fontWeight: 'bold',
+        padding: '12px 20px',
+    };
+
     const checkAuthAndRedirect = () => {
         const isAuthenticated = status === "authenticated";
 
         if (!isAuthenticated) {
-            toast.error("Please login first to add items to your cart!");
+            toast.error("Please login first to add items to your cart!", {
+                style: errorToastStyle,
+                iconTheme: { primary: '#fff', secondary: '#ef4444' }
+            });
             router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
             return false;
         }
@@ -57,14 +78,23 @@ const AddToCartSection = ({ product, inStock }) => {
             const { response, data } = await sendAddToCartRequest();
 
             if (response.ok) {
-                toast.success("Added to cart successfully! 🛒");
+                toast.success("Added to cart successfully! 🛒", {
+                    style: successToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ea580c' }
+                });
                 fetchCartCount();
             } else {
-                toast.error(data.message || "Failed to add product to cart");
+                toast.error(data.message || "Failed to add product to cart", {
+                    style: errorToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ef4444' }
+                });
             }
         } catch (error) {
             console.error("Cart error:", error);
-            toast.error("Something went wrong!");
+            toast.error("Something went wrong!", {
+                style: errorToastStyle,
+                iconTheme: { primary: '#fff', secondary: '#ef4444' }
+            });
         } finally {
             setLoading(false);
         }
@@ -81,14 +111,23 @@ const AddToCartSection = ({ product, inStock }) => {
 
             if (response.ok) {
                 fetchCartCount();
-                toast.success("Redirecting to checkout...");
+                toast.success("Redirecting to checkout...", {
+                    style: successToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ea580c' }
+                });
                 router.push('/checkout');
             } else {
-                toast.error(data.message || "Failed to process buy now");
+                toast.error(data.message || "Failed to process buy now", {
+                    style: errorToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ef4444' }
+                });
             }
         } catch (error) {
             console.error("Buy now error:", error);
-            toast.error("Something went wrong!");
+            toast.error("Something went wrong!", {
+                style: errorToastStyle,
+                iconTheme: { primary: '#fff', secondary: '#ef4444' }
+            });
         } finally {
             setBuyNowLoading(false);
         }

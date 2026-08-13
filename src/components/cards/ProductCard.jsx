@@ -21,10 +21,31 @@ const ProductCard = ({ product }) => {
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
 
+    // Toast Custom Styles (Matching Brand Orange Theme)
+    const successToastStyle = {
+        borderRadius: '12px',
+        background: '#ea580c', // Orange theme
+        color: '#fff',
+        fontWeight: 'bold',
+        padding: '12px 20px',
+        boxShadow: '0 10px 15px -3px rgba(234, 88, 12, 0.3)',
+    };
+
+    const errorToastStyle = {
+        borderRadius: '12px',
+        background: '#ef4444',
+        color: '#fff',
+        fontWeight: 'bold',
+        padding: '12px 20px',
+    };
+
     // Add to Cart Handler with Database Integration
     const handleAddToCart = async () => {
         if (!session) {
-            toast.error("Please login first to add items to cart!");
+            toast.error("Please login first to add items to cart!", {
+                style: errorToastStyle,
+                iconTheme: { primary: '#fff', secondary: '#ef4444' }
+            });
             router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
             return;
         }
@@ -50,13 +71,22 @@ const ProductCard = ({ product }) => {
 
             if (res.ok) {
                 fetchCartCount();
-                toast.success("Added to cart successfully! 🛒");
+                toast.success("Added to cart successfully! 🛒", {
+                    style: successToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ea580c' }
+                });
             } else {
-                toast.error(data.message || "Failed to add product");
+                toast.error(data.message || "Failed to add product", {
+                    style: errorToastStyle,
+                    iconTheme: { primary: '#fff', secondary: '#ef4444' }
+                });
             }
         } catch (error) {
             console.error("Cart error:", error);
-            toast.error("Something went wrong!");
+            toast.error("Something went wrong!", {
+                style: errorToastStyle,
+                iconTheme: { primary: '#fff', secondary: '#ef4444' }
+            });
         } finally {
             setLoading(false);
         }
@@ -147,7 +177,6 @@ const ProductCard = ({ product }) => {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };
