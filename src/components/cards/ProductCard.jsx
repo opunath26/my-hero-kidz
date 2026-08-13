@@ -6,12 +6,15 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingBag, FaEye, FaSpinner } from 'react-icons/fa';
+import { useCart } from '@/context/CartContext';
+import { toast } from 'react-hot-toast';
 
 const ProductCard = ({ product }) => {
     const { _id, title, image, price, discount, ratings, reviews, sold } = product;
 
     const [loading, setLoading] = useState(false);
     const { data: session } = useSession();
+    const { fetchCartCount } = useCart();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -21,6 +24,7 @@ const ProductCard = ({ product }) => {
     // Add to Cart Handler with Database Integration
     const handleAddToCart = async () => {
         if (!session) {
+            toast.error("Please login first to add items to cart!");
             router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
             return;
         }
@@ -45,13 +49,14 @@ const ProductCard = ({ product }) => {
             const data = await res.json();
 
             if (res.ok) {
-                alert("Product added to cart!");
+                fetchCartCount();
+                toast.success("Added to cart successfully! 🛒");
             } else {
-                alert(data.message || "Failed to add product");
+                toast.error(data.message || "Failed to add product");
             }
         } catch (error) {
             console.error("Cart error:", error);
-            alert("Something went wrong!");
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
