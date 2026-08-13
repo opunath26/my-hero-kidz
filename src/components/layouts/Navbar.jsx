@@ -7,9 +7,11 @@ import Image from 'next/image';
 import NavLink from '../buttons/NavLink';
 import { useSession, signOut } from 'next-auth/react';
 import { FiShoppingCart, FiUser, FiLogOut } from "react-icons/fi";
+import { useCart } from '@/context/CartContext';
 
 const Navbar = () => {
     const { data: session, status } = useSession();
+    const { cartCount } = useCart();
     const [imageError, setImageError] = useState(false);
 
     const nav = (
@@ -70,13 +72,17 @@ const Navbar = () => {
 
                     {/* Navbar End */}
                     <div className="flex justify-end items-center gap-2 sm:gap-3 navbar-end">
-                        {/* Shopping Cart Button */}
+                        {/* Shopping Cart Button with Dynamic Count */}
                         <Link href={"/cart"}>
                             <button className="group relative bg-primary/10 hover:bg-primary text-primary hover:text-white active:scale-90 transition-all duration-300 btn btn-circle btn-ghost">
                                 <FiShoppingCart className="text-xl group-hover:animate-bounce" />
-                                <span className="top-0 -right-1 absolute bg-warning shadow-sm px-1.5 py-0.5 rounded-full font-black text-[10px] text-white animate-pulse">
-                                    0
-                                </span>
+                                
+                                {/* 3. Dynamic Cart Badge Count */}
+                                {cartCount > 0 && (
+                                    <span className="-top-1 -right-1 absolute bg-warning shadow-sm px-1.5 py-0.5 rounded-full font-black text-[10px] text-white animate-pulse">
+                                        {cartCount}
+                                    </span>
+                                )}
                             </button>
                         </Link>
 

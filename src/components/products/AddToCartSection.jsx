@@ -5,11 +5,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { FaShoppingBag, FaBolt, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
+import { useCart } from '@/context/CartContext';
 
 const AddToCartSection = ({ product, inStock }) => {
     const router = useRouter();
     const pathname = usePathname();
     const { data: session, status } = useSession();
+    const { fetchCartCount } = useCart();
 
     const [loading, setLoading] = useState(false);
     const [buyNowLoading, setBuyNowLoading] = useState(false);
@@ -56,6 +58,7 @@ const AddToCartSection = ({ product, inStock }) => {
 
             if (response.ok) {
                 toast.success("Added to cart successfully! 🛒");
+                fetchCartCount();
             } else {
                 toast.error(data.message || "Failed to add product to cart");
             }
@@ -77,6 +80,7 @@ const AddToCartSection = ({ product, inStock }) => {
             const { response, data } = await sendAddToCartRequest();
 
             if (response.ok) {
+                fetchCartCount();
                 toast.success("Redirecting to checkout...");
                 router.push('/checkout');
             } else {
