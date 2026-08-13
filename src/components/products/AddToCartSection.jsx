@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { FaShoppingBag, FaBolt, FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 const AddToCartSection = ({ product, inStock }) => {
     const router = useRouter();
@@ -17,44 +18,73 @@ const AddToCartSection = ({ product, inStock }) => {
         const isAuthenticated = status === "authenticated";
 
         if (!isAuthenticated) {
+            toast.error("Please login first to add items to your cart!");
             router.push(`/login?redirectTo=${encodeURIComponent(pathname)}`);
             return false;
         }
         return true;
     };
 
-    //  Add to Cart Handler
+    // Helper function to send API Request
+    const sendAddToCartRequest = async () => {
+        const response = await fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productId: product._id || product.id,
+                title: product.title,
+                price: product.discountedPrice || product.price,
+                image: product.image,
+                quantity: 1,
+            }),
+        });
+
+        const data = await response.json();
+        return { response, data };
+    };
+
+    // 1. Add to Cart Handler
     const handleAddToCart = async () => {
         if (!inStock) return;
-        
         if (!checkAuthAndRedirect()) return;
 
         setLoading(true);
         try {
-            console.log("Adding to cart:", product);
-            
-            await new Promise((resolve) => setTimeout(resolve, 800));
+            const { response, data } = await sendAddToCartRequest();
+
+            if (response.ok) {
+                toast.success("Added to cart successfully! 🛒");
+            } else {
+                toast.error(data.message || "Failed to add product to cart");
+            }
         } catch (error) {
             console.error("Cart error:", error);
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
     };
 
-    //  Buy Now Handler
+    // 2. Buy Now Handler
     const handleBuyNow = async () => {
         if (!inStock) return;
-
         if (!checkAuthAndRedirect()) return;
 
         setBuyNowLoading(true);
         try {
-            console.log("Buying now:", product);
-            
-            await new Promise((resolve) => setTimeout(resolve, 800));
-            router.push('/checkout');
+            const { response, data } = await sendAddToCartRequest();
+
+            if (response.ok) {
+                toast.success("Redirecting to checkout...");
+                router.push('/checkout');
+            } else {
+                toast.error(data.message || "Failed to process buy now");
+            }
         } catch (error) {
             console.error("Buy now error:", error);
+            toast.error("Something went wrong!");
         } finally {
             setBuyNowLoading(false);
         }

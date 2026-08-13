@@ -59,3 +59,71 @@ export async function POST(req) {
         return NextResponse.json({ message: "Failed to add to cart", error: error.message }, { status: 500 });
     }
 }
+
+export async function PATCH(req) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.email) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        const { productId, action } = await req.json();
+        const userEmail = session.user.email;
+
+        const cartCollection = await dbConnect("carts");
+        const existingCart = await cartCollection.findOne({ userEmail });
+
+        if (!existingCart) {
+            return NextResponse.json({ message: "Cart not found" }, { status: 404 });
+        }
+
+        const itemIndex = existingCart.items.findIndex(item => item.productId === productId);
+
+        if (itemIndex > -1) {
+            if (action === "increase") {
+                existingCart.items[itemIndex].quantity += 1;
+            } else if (action === "decrease" && existingCart.items[itemIndex].quantity > 1) {
+                existingCart.items[itemIndex].quantity -= 1;
+            }
+
+            await cartCollection.updateOne(
+                { userEmail },
+                { $set: { items: existingCart.items, updatedAt: new Date() } }
+            );
+
+            return NextResponse.json({ message: "Quantity updated successfully!" }, { status: 200 });
+        }
+
+        return NextResponse.json({ message: "Item not found in cart" }, { status: 404 });
+    } catch (error) {
+        return NextResponse.json({ message: "Failed to update quantity", error: error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.email) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        const { searchParams } = new URL(req.url);
+        const productId = searchParams.get("productId");
+        const userEmail = session.user.email;
+
+        if (!productId) {
+            return NextResponse.json({ message: "Product ID is required" }, { status: 400 });
+        }
+
+        const cartCollection = await dbConnect("carts");
+
+        await cartCollection.updateOne(
+            { userEmail },
+            { $pull: { items: { productId: productId } }, $set: { updatedAt: new Date() } }
+        );
+
+        return NextResponse.json({ message: "Item removed from cart successfully!" }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Failed to remove item", error: error.message }, { status: 500 });
+    }
+}
