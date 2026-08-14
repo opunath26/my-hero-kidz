@@ -1,45 +1,51 @@
-const uri = process.env.MONGODB_URI;
-const dbname = process.env.DBNAME;
+import mongoose from "mongoose";
+
+const MONGODB_URI = process.env.MONGODB_URI;
+const DB_NAME = process.env.DBNAME || process.env.DB_NAME || "herokidzdb";
+
+if (!MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+}
 
 export const collection = {
-    PRODUCTS: "products",
+  PRODUCTS: "products",
+  CARTS: "carts",
+  ORDERS: "orders",
+  USERS: "users",
 };
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+let cached = global.mongoose;
 
-if (!uri) {
-    throw new Error('Please add your MONGODB_URI to .env.local');
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
-let client;
+export async function dbConnect(collectionName) {
+  if (!cached.conn) {
+    if (!cached.promise) {
+      const opts = {
+        bufferCommands: false,
+        dbName: DB_NAME,
+      };
 
-if (process.env.NODE_ENV === 'development') {
-    if (!global._mongoClient) {
-        global._mongoClient = new MongoClient(uri, {
-            serverApi: {
-                version: ServerApiVersion.v1,
-                strict: true,
-                deprecationErrors: true,
-            }
-        });
+      cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => {
+        m.connection.useDb(DB_NAME);
+        return m;
+      });
     }
-    client = global._mongoClient;
-} else {
-    client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-}
-
-export const dbConnect = async (cname) => {
     try {
-        await client.connect(); 
-        return client.db(dbname).collection(cname);
-    } catch (error) {
-        console.error("MongoDB Reconnection Failed:", error);
-        throw error;
+      cached.conn = await cached.promise;
+    } catch (e) {
+      cached.promise = null;
+      throw e;
     }
-};
+  }
+
+  if (collectionName) {
+    return cached.conn.connection.useDb(DB_NAME).collection(collectionName);
+  }
+
+  return cached.conn;
+}
+
+export default dbConnect;
