@@ -71,7 +71,6 @@ export async function POST(req) {
             console.log("Native cart update fallback skipped:", nativeErr.message);
         }
 
-        // 📧 ইমেইল পাঠানোর লজিক
         try {
             await transporter.sendMail({
                 from: `"HeroKidz" <${process.env.EMAIL_USER}>`,
