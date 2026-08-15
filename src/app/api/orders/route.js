@@ -4,6 +4,7 @@ import dbConnect, { collection } from "@/lib/dbConnect";
 import Order from "@/models/Order"; 
 import Cart from "@/models/Cart"; 
 import { authOptions } from "@/lib/authOption";
+import { transporter, generateOrderEmailHTML } from "@/lib/nodemailer";
 
 export async function POST(req) {
     try {
@@ -68,6 +69,19 @@ export async function POST(req) {
             );
         } catch (nativeErr) {
             console.log("Native cart update fallback skipped:", nativeErr.message);
+        }
+
+        // 📧 ইমেইল পাঠানোর লজিক
+        try {
+            await transporter.sendMail({
+                from: `"HeroKidz" <${process.env.EMAIL_USER}>`,
+                to: userEmail,
+                subject: `Order Confirmation - #${newOrder.orderId}`,
+                html: generateOrderEmailHTML(newOrder),
+            });
+            console.log(`Order confirmation email sent to ${userEmail}`);
+        } catch (emailError) {
+            console.error("Failed to send order email:", emailError.message);
         }
 
         return NextResponse.json(
