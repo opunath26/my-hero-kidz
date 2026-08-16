@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import dbConnect, { collection } from "@/lib/dbConnect";
 import Order from "@/models/Order"; 
 import Cart from "@/models/Cart"; 
+import Product from "@/models/Product";
 import { authOptions } from "@/lib/authOption";
 import { transporter, generateOrderEmailHTML } from "@/lib/nodemailer";
 
@@ -55,6 +56,20 @@ export async function POST(req) {
             orderStatus: "Pending",
             orderNotes: orderNotes || "",
         });
+
+        try {
+            const stockUpdatePromises = items.map((item) => {
+                const pId = item.productId || item._id;
+                return Product.findByIdAndUpdate(
+                    pId,
+                    { $inc: { stock: -item.quantity } },
+                    { new: true }
+                );
+            });
+            await Promise.all(stockUpdatePromises);
+        } catch (stockErr) {
+            console.error("Failed to update product stock:", stockErr.message);
+        }
 
         await Cart.findOneAndUpdate(
             { userEmail },
