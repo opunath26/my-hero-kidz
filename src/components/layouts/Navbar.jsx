@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import NavLink from '../buttons/NavLink';
 import { useSession, signOut } from 'next-auth/react';
-import { FiShoppingCart, FiUser, FiLogOut } from "react-icons/fi";
+import { FiShoppingCart, FiUser, FiPackage, FiLogOut, FiSettings } from "react-icons/fi";
 import { useCart } from '@/context/CartContext';
 
 const Navbar = () => {
@@ -54,7 +54,7 @@ const Navbar = () => {
                             </div>
                             <ul
                                 tabIndex={0}
-                                className="z-50 space-y-1 bg-base-100/95 shadow-xl backdrop-blur-lg mt-3 p-3 border border-base-200 rounded-[1.5rem] w-56 font-bold menu menu-md dropdown-content"
+                                className="z-50 space-y-1 bg-base-100/95 shadow-2xl backdrop-blur-lg mt-3 p-3 border border-base-200 rounded-3xl w-56 font-bold menu menu-md dropdown-content"
                             >
                                 {nav}
                             </ul>
@@ -72,14 +72,13 @@ const Navbar = () => {
 
                     {/* Navbar End */}
                     <div className="flex justify-end items-center gap-2 sm:gap-3 navbar-end">
-                        {/* Shopping Cart Button with Dynamic Count */}
+                        {/* Shopping Cart Button */}
                         <Link href={"/cart"}>
                             <button className="group relative bg-primary/10 hover:bg-primary text-primary hover:text-white active:scale-90 transition-all duration-300 btn btn-circle btn-ghost">
-                                <FiShoppingCart className="text-xl group-hover:animate-bounce" />
+                                <FiShoppingCart className="text-xl group-hover:rotate-12 transition-transform" />
                                 
-                                {/* 3. Dynamic Cart Badge Count */}
                                 {cartCount > 0 && (
-                                    <span className="-top-1 -right-1 absolute bg-warning shadow-sm px-1.5 py-0.5 rounded-full font-black text-[10px] text-white animate-pulse">
+                                    <span className="-top-1 -right-1 absolute bg-warning shadow-md px-2 py-0.5 rounded-full font-black text-[10px] text-white animate-pulse">
                                         {cartCount}
                                     </span>
                                 )}
@@ -90,7 +89,7 @@ const Navbar = () => {
                         {status === "loading" ? (
                             <span className="text-primary loading-spinner loading-md loading"></span>
                         ) : session?.user ? (
-                            /* User Profile Dropdown when logged in */
+                            /* Profile Dropdown when logged in */
                             <div className="dropdown dropdown-end">
                                 <div 
                                     tabIndex={0} 
@@ -108,24 +107,51 @@ const Navbar = () => {
                                                 className="object-cover"
                                             />
                                         ) : (
-                                            <div className="flex justify-center items-center w-full h-full font-bold text-primary text-sm">
+                                            <div className="flex justify-center items-center w-full h-full font-black text-primary text-sm">
                                                 {session.user.name ? session.user.name.charAt(0).toUpperCase() : <FiUser className="text-lg" />}
                                             </div>
                                         )}
                                     </div>
                                 </div>
+                                
                                 <ul 
                                     tabIndex={0} 
-                                    className="z-50 space-y-2 bg-base-100 shadow-2xl backdrop-blur-lg mt-3 p-4 border border-base-200 rounded-2xl w-60 dropdown-content"
+                                    className="z-50 space-y-1 bg-base-100 shadow-2xl backdrop-blur-lg mt-3 p-3 border border-base-200 rounded-3xl w-64 dropdown-content"
                                 >
-                                    <li className="px-2 py-1 border-base-200 border-b">
+                                    {/* User Info Header */}
+                                    <li className="px-3 py-2 border-base-200 border-b">
                                         <p className="font-bold text-sm text-base-content truncate">{session.user.name || "User"}</p>
-                                        <p className="text-zinc-500 text-xs truncate">{session.user.email}</p>
+                                        <p className="text-xs text-base-content/60 truncate">{session.user.email}</p>
                                     </li>
+
+                                    {/* Navigation Links */}
+                                    <li className="pt-1">
+                                        <Link 
+                                            href="/profile" 
+                                            className="flex items-center gap-3 hover:bg-primary/10 px-3 py-2.5 rounded-2xl font-bold text-sm transition-all"
+                                        >
+                                            <FiUser className="text-primary text-base" />
+                                            <span>My Profile</span>
+                                        </Link>
+                                    </li>
+
+                                    <li>
+                                        <Link 
+                                            href="/my-orders" 
+                                            className="flex items-center gap-3 hover:bg-primary/10 px-3 py-2.5 rounded-2xl font-bold text-sm transition-all"
+                                        >
+                                            <FiPackage className="text-primary text-base" />
+                                            <span>My Orders</span>
+                                        </Link>
+                                    </li>
+
+                                    <div className="my-1 border-base-200 border-t"></div>
+
+                                    {/* Sign Out Button */}
                                     <li>
                                         <button 
                                             onClick={() => signOut({ callbackUrl: "/login" })}
-                                            className="flex items-center gap-2 hover:bg-error/10 py-2.5 rounded-xl w-full font-bold text-error text-sm transition-all"
+                                            className="flex items-center gap-3 hover:bg-error/10 px-3 py-2.5 rounded-2xl w-full font-bold text-error text-sm transition-all"
                                         >
                                             <FiLogOut className="text-base" />
                                             <span>Sign Out</span>
@@ -136,7 +162,7 @@ const Navbar = () => {
                         ) : (
                             /* Login Button when not logged in */
                             <Link href={"/login"}>
-                                <button className="flex items-center gap-2 shadow-md shadow-primary/20 px-4 sm:px-6 rounded-full font-black text-white text-sm sm:text-base hover:scale-105 active:scale-95 transition-all duration-200 btn btn-primary">
+                                <button className="flex items-center gap-2 shadow-md shadow-primary/20 px-5 rounded-full font-black text-white text-sm hover:scale-105 active:scale-95 transition-all duration-200 btn btn-primary">
                                     <FiUser className="text-base" />
                                     <span>Login</span>
                                 </button>
