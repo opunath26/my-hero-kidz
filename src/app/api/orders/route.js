@@ -3,9 +3,9 @@ import { getServerSession } from "next-auth";
 import dbConnect, { collection } from "@/lib/dbConnect";
 import Order from "@/models/Order"; 
 import Cart from "@/models/Cart"; 
-import Product from "@/models/Product";
 import { authOptions } from "@/lib/authOption";
 import { transporter, generateOrderEmailHTML } from "@/lib/nodemailer";
+import Product from "@/models/Product";
 
 // ----------------------------------------------------------------------
 // 1. POST: Place a new order, update stock, clear cart & send email
