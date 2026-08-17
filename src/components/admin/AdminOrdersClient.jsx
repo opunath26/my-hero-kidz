@@ -39,7 +39,7 @@ export default function AdminOrdersClient() {
       if (res.ok) {
         setOrders((prev) =>
           prev.map((ord) =>
-            ord._id === orderId ? { ...ord, status: newStatus } : ord
+            ord._id === orderId ? { ...ord, orderStatus: newStatus } : ord
           )
         );
       }
@@ -53,29 +53,29 @@ export default function AdminOrdersClient() {
   const getStatusBadge = (status) => {
     switch (status) {
       case "Processing":
-        return <span className="gap-1 font-bold text-white badge badge-warning"><FaClock /> Processing</span>;
+        return <span className="badge badge-warning gap-1 text-white font-bold"><FaClock /> Processing</span>;
       case "Delivered":
-        return <span className="gap-1 font-bold text-white badge badge-success"><FaCheckCircle /> Delivered</span>;
+        return <span className="badge badge-success gap-1 text-white font-bold"><FaCheckCircle /> Delivered</span>;
       case "Cancelled":
-        return <span className="gap-1 font-bold text-white badge badge-error"><FaTimesCircle /> Cancelled</span>;
+        return <span className="badge badge-error gap-1 text-white font-bold"><FaTimesCircle /> Cancelled</span>;
       default:
-        return <span className="gap-1 font-bold text-white badge badge-info"><FaTruck /> Pending</span>;
+        return <span className="badge badge-info gap-1 text-white font-bold"><FaTruck /> Pending</span>;
     }
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <span className="text-primary loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg text-primary"></span>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto p-4 sm:p-6 max-w-7xl">
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+      <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
         <div>
-          <h1 className="font-black text-2xl">Order Management</h1>
+          <h1 className="text-2xl font-black">Order Management</h1>
           <p className="text-sm text-base-content/70">
             Total Orders: <span className="font-bold text-primary">{orders.length}</span>
           </p>
@@ -83,7 +83,7 @@ export default function AdminOrdersClient() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-base-100 shadow-sm border border-base-200 rounded-3xl overflow-x-auto">
+      <div className="overflow-x-auto bg-base-100 rounded-3xl border border-base-200 shadow-sm">
         <table className="table w-full">
           <thead>
             <tr className="bg-base-200/50 text-xs">
@@ -98,26 +98,30 @@ export default function AdminOrdersClient() {
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan="6" className="py-8 text-base-content/60 text-center">
+                <td colSpan="6" className="text-center py-8 text-base-content/60">
                   No orders found.
                 </td>
               </tr>
             ) : (
               orders.map((order) => (
                 <tr key={order._id} className="hover:bg-base-200/30 transition-all">
-                  <td className="font-mono font-bold text-xs">
-                    #{order._id.slice(-6).toUpperCase()}
+                  <td className="font-mono text-xs font-bold">
+                    {order.orderId || `#${order._id.slice(-6).toUpperCase()}`}
                   </td>
                   <td>
                     <div>
-                      <p className="font-bold text-sm">{order.shippingDetails?.name || "N/A"}</p>
-                      <p className="text-xs text-base-content/60">{order.shippingDetails?.phone}</p>
+                      <p className="font-bold text-sm">
+                        {order.shippingAddress?.fullName || order.shippingAddress?.name || "N/A"}
+                      </p>
+                      <p className="text-xs text-base-content/60">
+                        {order.shippingAddress?.phone || order.userEmail}
+                      </p>
                     </div>
                   </td>
                   <td className="font-black text-primary">
-                    ৳{order.totalAmount || order.total || 0}
+                    ৳{order.totalAmount || 0}
                   </td>
-                  <td>{getStatusBadge(order.status || "Pending")}</td>
+                  <td>{getStatusBadge(order.orderStatus || "Pending")}</td>
                   <td className="text-xs text-base-content/70">
                     {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"}
                   </td>
@@ -125,10 +129,10 @@ export default function AdminOrdersClient() {
                     <div className="flex justify-center items-center gap-2">
                       {/* Change Status Dropdown */}
                       <select
-                        value={order.status || "Pending"}
+                        value={order.orderStatus || "Pending"}
                         disabled={updatingId === order._id}
                         onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        className="rounded-xl font-bold select-bordered select-xs select"
+                        className="select select-bordered select-xs rounded-xl font-bold"
                       >
                         <option value="Pending">Pending</option>
                         <option value="Processing">Processing</option>
@@ -139,7 +143,7 @@ export default function AdminOrdersClient() {
                       {/* View Details Button */}
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="text-primary btn btn-circle btn-ghost btn-xs"
+                        className="btn btn-circle btn-ghost btn-xs text-primary"
                         title="View Order Details"
                       >
                         <FaEye className="text-sm" />
@@ -156,32 +160,57 @@ export default function AdminOrdersClient() {
       {/* Order Details Modal */}
       {selectedOrder && (
         <dialog className="modal modal-open">
-          <div className="rounded-3xl max-w-2xl modal-box">
-            <h3 className="mb-4 pb-2 border-b font-black text-lg">
-              Order Details (#{selectedOrder._id.slice(-6).toUpperCase()})
+          <div className="modal-box rounded-3xl max-w-2xl">
+            <h3 className="font-black text-lg mb-4 border-b pb-2">
+              Order Details ({selectedOrder.orderId || `#${selectedOrder._id.slice(-6).toUpperCase()}`})
             </h3>
             
             <div className="space-y-4 text-sm">
-              <div className="gap-2 grid grid-cols-2 bg-base-200/50 p-4 rounded-2xl">
+              <div className="grid grid-cols-2 gap-3 bg-base-200/50 p-4 rounded-2xl">
                 <div>
                   <p className="text-xs text-base-content/60">Customer Name</p>
-                  <p className="font-bold">{selectedOrder.shippingDetails?.name}</p>
+                  <p className="font-bold">
+                    {selectedOrder.shippingAddress?.fullName ||
+                      selectedOrder.shippingAddress?.name ||
+                      "N/A"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-base-content/60">Phone</p>
-                  <p className="font-bold">{selectedOrder.shippingDetails?.phone}</p>
+                  <p className="font-bold">
+                    {selectedOrder.shippingAddress?.phone || "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-base-content/60">Email</p>
+                  <p className="font-bold">{selectedOrder.userEmail || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-base-content/60">Payment</p>
+                  <p className="font-bold capitalize">
+                    {selectedOrder.paymentMethod} ({selectedOrder.paymentStatus})
+                  </p>
                 </div>
                 <div className="col-span-2">
                   <p className="text-xs text-base-content/60">Address</p>
-                  <p className="font-bold">{selectedOrder.shippingDetails?.address}, {selectedOrder.shippingDetails?.city}</p>
+                  <p className="font-bold">
+                    {selectedOrder.shippingAddress?.address || selectedOrder.shippingAddress?.fullAddress || "N/A"}
+                    {selectedOrder.shippingAddress?.city ? `, ${selectedOrder.shippingAddress.city}` : ""}
+                  </p>
                 </div>
+                {selectedOrder.orderNotes && (
+                  <div className="col-span-2">
+                    <p className="text-xs text-base-content/60">Order Notes</p>
+                    <p className="font-bold italic">{selectedOrder.orderNotes}</p>
+                  </div>
+                )}
               </div>
 
               <div>
-                <p className="mb-2 font-bold">Items Ordered:</p>
+                <p className="font-bold mb-2">Items Ordered:</p>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {selectedOrder.items?.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center bg-base-100 p-2 border rounded-xl text-xs">
+                    <div key={idx} className="flex justify-between items-center bg-base-100 border p-2 rounded-xl text-xs">
                       <span>{item.title || item.name} (x{item.quantity})</span>
                       <span className="font-bold text-primary">৳{(item.price || 0) * (item.quantity || 1)}</span>
                     </div>
@@ -191,7 +220,7 @@ export default function AdminOrdersClient() {
             </div>
 
             <div className="modal-action">
-              <button onClick={() => setSelectedOrder(null)} className="rounded-xl btn btn-sm">
+              <button onClick={() => setSelectedOrder(null)} className="btn btn-sm rounded-xl">
                 Close
               </button>
             </div>

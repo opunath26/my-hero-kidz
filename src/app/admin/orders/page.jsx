@@ -11,7 +11,7 @@ export const metadata = {
 
 const ADMIN_EMAILS = [
   "admin@gmail.com",
-  "apunath@gmail.com",
+  "artistop26@gmail.com",
 ];
 
 export default async function AdminOrdersPage() {
