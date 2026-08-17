@@ -6,13 +6,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import NavLink from '../buttons/NavLink';
 import { useSession, signOut } from 'next-auth/react';
-import { FiShoppingCart, FiUser, FiPackage, FiLogOut, FiSettings } from "react-icons/fi";
+import { FiShoppingCart, FiUser, FiPackage, FiLogOut, FiLayout } from "react-icons/fi";
 import { useCart } from '@/context/CartContext';
+
+const ADMIN_EMAILS = ["admin@gmail.com", "artistop26@gmail.com"];
 
 const Navbar = () => {
     const { data: session, status } = useSession();
     const { cartCount } = useCart();
     const [imageError, setImageError] = useState(false);
+
+    const isAdmin = session?.user?.email && ADMIN_EMAILS.some(
+        (email) => email.trim().toLowerCase() === session.user.email.trim().toLowerCase()
+    );
 
     const nav = (
         <>
@@ -124,8 +130,20 @@ const Navbar = () => {
                                         <p className="text-xs text-base-content/60 truncate">{session.user.email}</p>
                                     </li>
 
+                                    {isAdmin && (
+                                        <li className="pt-1">
+                                            <Link 
+                                                href="/admin" 
+                                                className="flex items-center gap-3 bg-primary/10 hover:bg-primary px-3 py-2.5 rounded-2xl font-bold text-primary hover:text-white text-sm transition-all"
+                                            >
+                                                <FiLayout className="text-base" />
+                                                <span>Admin Dashboard</span>
+                                            </Link>
+                                        </li>
+                                    )}
+
                                     {/* Navigation Links */}
-                                    <li className="pt-1">
+                                    <li className={isAdmin ? "" : "pt-1"}>
                                         <Link 
                                             href="/profile" 
                                             className="flex items-center gap-3 hover:bg-primary/10 px-3 py-2.5 rounded-2xl font-bold text-sm transition-all"
