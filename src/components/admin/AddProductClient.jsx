@@ -2,11 +2,28 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaPlusCircle, FaBox, FaDollarSign, FaTags, FaLayerGroup, FaImage, FaPercent, FaLanguage } from "react-icons/fa";
+import {
+  FaPlusCircle,
+  FaBox,
+  FaDollarSign,
+  FaTags,
+  FaLayerGroup,
+  FaImage,
+  FaPercent,
+  FaLanguage,
+  FaCheckCircle,
+  FaExclamationCircle,
+} from "react-icons/fa";
 
 export default function AddProductClient() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "success", // 'success' or 'error'
+    message: "",
+  });
+
   const [formData, setFormData] = useState({
     title: "",
     bangla: "",
@@ -34,7 +51,6 @@ export default function AddProductClient() {
       });
 
       if (res.ok) {
-        alert("Product added successfully!");
         setFormData({
           title: "",
           bangla: "",
@@ -45,14 +61,27 @@ export default function AddProductClient() {
           stock: "",
           description: "",
         });
+        setModalState({
+          isOpen: true,
+          type: "success",
+          message: "Product added successfully!",
+        });
         router.refresh();
       } else {
         const data = await res.json();
-        alert(data.message || "Failed to add product");
+        setModalState({
+          isOpen: true,
+          type: "error",
+          message: data.message || "Failed to add product",
+        });
       }
     } catch (error) {
       console.error("Error adding product:", error);
-      alert("Something went wrong");
+      setModalState({
+        isOpen: true,
+        type: "error",
+        message: "Something went wrong! Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -212,6 +241,39 @@ export default function AddProductClient() {
           </button>
         </form>
       </div>
+
+      {/* 🛑 Custom DaisyUI Alert Modal */}
+      {modalState.isOpen && (
+        <dialog className="modal modal-open">
+          <div className="rounded-3xl max-w-sm text-center modal-box">
+            <div
+              className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                modalState.type === "success"
+                  ? "bg-success/10 text-success"
+                  : "bg-error/10 text-error"
+              }`}
+            >
+              {modalState.type === "success" ? (
+                <FaCheckCircle className="text-3xl" />
+              ) : (
+                <FaExclamationCircle className="text-3xl" />
+              )}
+            </div>
+            <h3 className="font-black text-lg">
+              {modalState.type === "success" ? "Success!" : "Failed!"}
+            </h3>
+            <p className="mt-2 text-sm text-base-content/70">{modalState.message}</p>
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setModalState({ ...modalState, isOpen: false })}
+                className="px-6 rounded-xl font-bold btn btn-sm btn-neutral"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 }
