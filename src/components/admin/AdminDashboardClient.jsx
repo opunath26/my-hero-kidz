@@ -27,6 +27,7 @@ export default function AdminDashboardClient() {
     { month: "May", sales: 28000 },
     { month: "Jun", sales: 24000 },
     { month: "Jul", sales: 31000 },
+    { month: "Aug", sales: 35000 },
   ];
 
   const categoryData = [

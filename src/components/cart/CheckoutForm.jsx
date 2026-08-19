@@ -7,14 +7,14 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   FaShippingFast,
-  FaCreditCard,
-  FaMoneyBillWave,
   FaLock,
   FaChevronRight,
   FaCheckCircle,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { useCart } from "@/context/CartContext";
+import PaymentMethods from "./PaymentMethods";
+
 
 const CheckoutForm = () => {
   const { data: session, status } = useSession();
@@ -34,6 +34,8 @@ const CheckoutForm = () => {
     address: "",
     orderNotes: "",
     paymentMethod: "cod",
+    paymentSenderPhone: "",
+    paymentTrxId: "",
     deliveryArea: "inside_dhaka",
   });
 
@@ -98,6 +100,14 @@ const CheckoutForm = () => {
       return;
     }
 
+    // Validation for Manual Payment
+    if (formData.paymentMethod === "bkash" || formData.paymentMethod === "nagad") {
+      if (!formData.paymentSenderPhone || !formData.paymentTrxId) {
+        toast.error("Please enter your sender mobile number and Transaction ID!");
+        return;
+      }
+    }
+
     if (cartItems.length === 0) {
       toast.error("Your cart is empty!");
       return;
@@ -126,6 +136,14 @@ const CheckoutForm = () => {
         subtotal,
         totalAmount: grandTotal,
         paymentMethod: formData.paymentMethod,
+        paymentDetails:
+          formData.paymentMethod !== "cod"
+            ? {
+                senderPhone: formData.paymentSenderPhone,
+                trxId: formData.paymentTrxId,
+              }
+            : null,
+        paymentStatus: formData.paymentMethod === "cod" ? "Unpaid" : "Pending Verification",
         orderNotes: formData.orderNotes,
       };
 
@@ -320,66 +338,13 @@ const CheckoutForm = () => {
               </div>
             </div>
 
-            {/* 2. Payment Method Options */}
-            <div className="space-y-4 bg-base-100 shadow-sm p-6 border border-base-200/80 rounded-3xl">
-              <div className="flex items-center gap-3 pb-3 border-base-200 border-b">
-                <FaCreditCard className="text-primary text-xl" />
-                <h2 className="font-bold text-lg">Payment Method</h2>
-              </div>
-
-              <div className="space-y-3">
-                {/* Cash on Delivery */}
-                <label
-                  className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer transition-all ${
-                    formData.paymentMethod === "cod"
-                      ? "border-primary bg-primary/5 shadow-sm"
-                      : "border-base-200 hover:border-base-300"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={formData.paymentMethod === "cod"}
-                      onChange={handleChange}
-                      className="accent-primary"
-                    />
-                    <div className="flex items-center gap-2">
-                      <FaMoneyBillWave className="text-success text-lg" />
-                      <div>
-                        <p className="font-bold text-sm">Cash on Delivery (COD)</p>
-                        <p className="text-xs text-base-content/60">Pay with cash upon delivery</p>
-                      </div>
-                    </div>
-                  </div>
-                </label>
-
-                {/* Online / Mobile Banking */}
-                <label
-                  className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer transition-all ${
-                    formData.paymentMethod === "bkash"
-                      ? "border-primary bg-primary/5 shadow-sm"
-                      : "border-base-200 hover:border-base-300"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="bkash"
-                      checked={formData.paymentMethod === "bkash"}
-                      onChange={handleChange}
-                      className="accent-primary"
-                    />
-                    <div>
-                      <p className="font-bold text-sm">Online Payment / bKash / Nagad</p>
-                      <p className="text-xs text-base-content/60">Pay securely using digital wallet</p>
-                    </div>
-                  </div>
-                </label>
-              </div>
-            </div>
+            {/* 2. Isolated Payment Method Component */}
+            <PaymentMethods
+              formData={formData}
+              setFormData={setFormData}
+              handleChange={handleChange}
+              grandTotal={grandTotal}
+            />
 
             {/* Order Notes */}
             <div className="bg-base-100 shadow-sm p-6 border border-base-200/80 rounded-3xl">
