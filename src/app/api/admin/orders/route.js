@@ -16,6 +16,7 @@ const isAdminUser = (email) => {
   );
 };
 
+// GET: All Orders for Admin
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -37,6 +38,7 @@ export async function GET() {
   }
 }
 
+// PATCH: Update orderStatus & paymentStatus
 export async function PATCH(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -45,42 +47,61 @@ export async function PATCH(req) {
       return NextResponse.json({ message: "Forbidden: Admin access only" }, { status: 403 });
     }
 
-    const { orderId, status } = await req.json();
+    const { orderId, orderStatus, paymentStatus } = await req.json();
 
-    if (!orderId || !status) {
+    if (!orderId) {
       return NextResponse.json(
-        { message: "Order ID and status are required" },
+        { message: "Order ID is required" },
         { status: 400 }
       );
     }
 
+    if (!orderStatus && !paymentStatus) {
+      return NextResponse.json(
+        { message: "Please provide orderStatus or paymentStatus to update" },
+        { status: 400 }
+      );
+    }
+
+    // Dynamic field update
+    const updateFields = {
+      updatedAt: new Date(),
+    };
+
+    if (orderStatus) updateFields.orderStatus = orderStatus;
+    if (paymentStatus) updateFields.paymentStatus = paymentStatus;
+
     const ordersCollection = await dbConnect(collection.ORDERS);
 
-    const result = await ordersCollection.updateOne(
-      { _id: new ObjectId(orderId) },
-      {
-        $set: {
-          orderStatus: status,
-          updatedAt: new Date(),
-        },
-      }
-    );
+    // Safe Filter logic (_id or custom orderId string)
+    let filter = {};
+    if (typeof orderId === "string" && orderId.startsWith("ORD-")) {
+      filter = { orderId: orderId };
+    } else if (ObjectId.isValid(orderId)) {
+      filter = { _id: new ObjectId(orderId) };
+    } else {
+      filter = { orderId: orderId };
+    }
 
-    if (result.modifiedCount === 0) {
+    const result = await ordersCollection.updateOne(filter, {
+      $set: updateFields,
+    });
+
+    if (result.matchedCount === 0) {
       return NextResponse.json(
-        { message: "Order not found or status unchanged" },
+        { message: "Order not found" },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      { message: "Order status updated successfully" },
+      { message: "Order updated successfully", updatedData: updateFields },
       { status: 200 }
     );
   } catch (error) {
     console.error("Admin Update Order Error:", error);
     return NextResponse.json(
-      { message: "Failed to update order status", error: error.message },
+      { message: "Failed to update order", error: error.message },
       { status: 500 }
     );
   }

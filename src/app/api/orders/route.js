@@ -33,6 +33,9 @@ export async function POST(req) {
             subtotal,
             totalAmount,
             paymentMethod,
+            paymentSenderPhone, 
+            paymentTrxId, 
+            paymentDetails,
             orderNotes,
         } = body;
 
@@ -45,6 +48,15 @@ export async function POST(req) {
 
         const orderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
+        const formattedPaymentDetails = paymentDetails || (
+            paymentSenderPhone || paymentTrxId
+                ? {
+                    senderPhone: paymentSenderPhone || "",
+                    trxId: paymentTrxId || "",
+                  }
+                : null
+        );
+
         const newOrder = await Order.create({
             orderId,
             userEmail,
@@ -55,7 +67,8 @@ export async function POST(req) {
             subtotal,
             totalAmount,
             paymentMethod,
-            paymentStatus: paymentMethod === "cod" ? "Pending" : "Paid",
+            paymentDetails: formattedPaymentDetails,
+            paymentStatus: paymentMethod === "cod" ? "Unpaid" : "Pending Verification", 
             orderStatus: "Pending",
             orderNotes: orderNotes || "",
         });

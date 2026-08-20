@@ -16,6 +16,11 @@ const ShippingAddressSchema = new mongoose.Schema({
   address: { type: String, required: true },
 });
 
+const PaymentDetailsSchema = new mongoose.Schema({
+  senderPhone: { type: String, default: "" },
+  trxId: { type: String, default: "" },
+});
+
 const OrderSchema = new mongoose.Schema(
   {
     orderId: { type: String, required: true, unique: true },
@@ -26,8 +31,21 @@ const OrderSchema = new mongoose.Schema(
     shippingFee: { type: Number, required: true },
     subtotal: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
-    paymentMethod: { type: String, required: true },
-    paymentStatus: { type: String, default: "Pending" },
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ["cod", "bkash", "nagad"],
+      default: "cod",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["Unpaid", "Pending Verification", "Paid", "Failed", "Refunded"],
+      default: "Unpaid",
+    },
+    paymentDetails: {
+      type: PaymentDetailsSchema,
+      default: null,
+    },
     orderStatus: { type: String, default: "Pending" },
     orderNotes: { type: String },
   },

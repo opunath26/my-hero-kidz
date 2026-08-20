@@ -7,13 +7,15 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
   const BKASH_NUMBER = "01700000000";
   const NAGAD_NUMBER = "01800000000";
 
-  const handleSelectMethod = (method) => {
-    setFormData((prev) => ({
-      ...prev,
-      paymentMethod: method,
-      paymentSenderPhone: "",
-      paymentTrxId: "",
-    }));
+  const handleMethodChange = (method) => {
+    if (formData.paymentMethod !== method) {
+      setFormData((prev) => ({
+        ...prev,
+        paymentMethod: method,
+        paymentSenderPhone: "",
+        paymentTrxId: "",
+      }));
+    }
   };
 
   return (
@@ -25,8 +27,8 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
 
       <div className="space-y-3">
         {/* Cash on Delivery */}
-        <label
-          onClick={() => handleSelectMethod("cod")}
+        <div
+          onClick={() => handleMethodChange("cod")}
           className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer transition-all ${
             formData.paymentMethod === "cod"
               ? "border-primary bg-primary/5 shadow-sm"
@@ -39,22 +41,24 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
               name="paymentMethod"
               value="cod"
               checked={formData.paymentMethod === "cod"}
-              onChange={() => handleSelectMethod("cod")}
-              className="accent-primary"
+              onChange={() => handleMethodChange("cod")}
+              className="accent-primary cursor-pointer"
             />
             <div className="flex items-center gap-2">
               <FaMoneyBillWave className="text-success text-lg" />
               <div>
                 <p className="font-bold text-sm">Cash on Delivery (COD)</p>
-                <p className="text-xs text-base-content/60">Pay with cash upon delivery</p>
+                <p className="text-xs text-base-content/60">
+                  Pay with cash upon delivery
+                </p>
               </div>
             </div>
           </div>
-        </label>
+        </div>
 
         {/* bKash Payment */}
-        <label
-          onClick={() => handleSelectMethod("bkash")}
+        <div
+          onClick={() => handleMethodChange("bkash")}
           className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer transition-all ${
             formData.paymentMethod === "bkash"
               ? "border-[#D12053] bg-[#D12053]/5 shadow-sm"
@@ -67,19 +71,23 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
               name="paymentMethod"
               value="bkash"
               checked={formData.paymentMethod === "bkash"}
-              onChange={() => handleSelectMethod("bkash")}
-              className="accent-[#D12053]"
+              onChange={() => handleMethodChange("bkash")}
+              className="accent-[#D12053] cursor-pointer"
             />
             <div>
-              <p className="font-bold text-[#D12053] text-sm">bKash (Send Money / Cash In)</p>
-              <p className="text-xs text-base-content/60">Pay using your bKash wallet</p>
+              <p className="font-bold text-[#D12053] text-sm">
+                bKash (Send Money / Cash In)
+              </p>
+              <p className="text-xs text-base-content/60">
+                Pay using your bKash wallet
+              </p>
             </div>
           </div>
-        </label>
+        </div>
 
         {/* Nagad Payment */}
-        <label
-          onClick={() => handleSelectMethod("nagad")}
+        <div
+          onClick={() => handleMethodChange("nagad")}
           className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer transition-all ${
             formData.paymentMethod === "nagad"
               ? "border-[#F7921E] bg-[#F7921E]/5 shadow-sm"
@@ -92,15 +100,19 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
               name="paymentMethod"
               value="nagad"
               checked={formData.paymentMethod === "nagad"}
-              onChange={() => handleSelectMethod("nagad")}
-              className="accent-[#F7921E]"
+              onChange={() => handleMethodChange("nagad")}
+              className="accent-[#F7921E] cursor-pointer"
             />
             <div>
-              <p className="font-bold text-[#F7921E] text-sm">Nagad (Send Money / Cash In)</p>
-              <p className="text-xs text-base-content/60">Pay using your Nagad wallet</p>
+              <p className="font-bold text-[#F7921E] text-sm">
+                Nagad (Send Money / Cash In)
+              </p>
+              <p className="text-xs text-base-content/60">
+                Pay using your Nagad wallet
+              </p>
             </div>
           </div>
-        </label>
+        </div>
       </div>
 
       {/* Manual Payment Details Form (bKash & Nagad) */}
@@ -114,12 +126,17 @@ const PaymentMethods = ({ formData, setFormData, handleChange, grandTotal }) => 
             </div>
             <ol className="space-y-1 text-base-content/80 list-decimal list-inside">
               <li>
-                Please Send Money / Cash In total <strong className="font-black text-primary">৳{grandTotal}</strong> to:
+                Please Send Money / Cash In total{" "}
+                <strong className="font-black text-primary">৳{grandTotal}</strong> to:
               </li>
-              <li className="bg-base-200/70 my-1 p-1 border rounded font-mono font-bold text-sm text-center">
-                {formData.paymentMethod === "bkash" ? `bKash: ${BKASH_NUMBER}` : `Nagad: ${NAGAD_NUMBER}`}
+              <li className="bg-base-200/70 my-1 p-1 border rounded font-mono font-bold text-sm text-center select-all">
+                {formData.paymentMethod === "bkash"
+                  ? `bKash: ${BKASH_NUMBER}`
+                  : `Nagad: ${NAGAD_NUMBER}`}
               </li>
-              <li>Enter your wallet number & Transaction ID (TrxID) below for verification.</li>
+              <li>
+                Enter your wallet number & Transaction ID (TrxID) below for verification.
+              </li>
             </ol>
           </div>
 
