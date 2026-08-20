@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle, FaEye } from "react-icons/fa";
+import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle, FaEye, FaCreditCard } from "react-icons/fa";
 
 export default function AdminOrdersClient() {
   const [orders, setOrders] = useState([]);
@@ -27,21 +27,41 @@ export default function AdminOrdersClient() {
     fetchOrders();
   }, []);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  const handleStatusChange = async (orderId, newStatus, isPaymentStatus = false) => {
     setUpdatingId(orderId);
     try {
+      const payload = { orderId };
+      if (isPaymentStatus) {
+        payload.paymentStatus = newStatus;
+      } else {
+        payload.orderStatus = newStatus;
+      }
+
       const res = await fetch("/api/admin/orders", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, status: newStatus }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         setOrders((prev) =>
-          prev.map((ord) =>
-            ord._id === orderId ? { ...ord, orderStatus: newStatus } : ord
-          )
+          prev.map((ord) => {
+            if (ord._id === orderId || ord.orderId === orderId) {
+              return isPaymentStatus
+                ? { ...ord, paymentStatus: newStatus }
+                : { ...ord, orderStatus: newStatus };
+            }
+            return ord;
+          })
         );
+
+        // Update selected modal state if open
+        if (selectedOrder && (selectedOrder._id === orderId || selectedOrder.orderId === orderId)) {
+          setSelectedOrder((prev) => ({
+            ...prev,
+            ...(isPaymentStatus ? { paymentStatus: newStatus } : { orderStatus: newStatus }),
+          }));
+        }
       }
     } catch (error) {
       console.error("Status update error:", error);
@@ -127,11 +147,11 @@ export default function AdminOrdersClient() {
                   </td>
                   <td className="text-center">
                     <div className="flex justify-center items-center gap-2">
-                      {/* Change Status Dropdown */}
+                      {/* Change Order Status Dropdown */}
                       <select
                         value={order.orderStatus || "Pending"}
                         disabled={updatingId === order._id}
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        onChange={(e) => handleStatusChange(order._id, e.target.value, false)}
                         className="select select-bordered select-xs rounded-xl font-bold"
                       >
                         <option value="Pending">Pending</option>
@@ -186,16 +206,14 @@ export default function AdminOrdersClient() {
                   <p className="font-bold">{selectedOrder.userEmail || "N/A"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-base-content/60">Payment</p>
-                  <p className="font-bold capitalize">
-                    {selectedOrder.paymentMethod} ({selectedOrder.paymentStatus})
-                  </p>
+                  <p className="text-xs text-base-content/60">Payment Method</p>
+                  <p className="font-bold capitalize">{selectedOrder.paymentMethod || "N/A"}</p>
                 </div>
                 <div className="col-span-2">
                   <p className="text-xs text-base-content/60">Address</p>
                   <p className="font-bold">
                     {selectedOrder.shippingAddress?.address || selectedOrder.shippingAddress?.fullAddress || "N/A"}
-                    {selectedOrder.shippingAddress?.city ? `, ${selectedOrder.shippingAddress.city}` : ""}
+                    {selectedOrder.shippingAddress?.district ? `, ${selectedOrder.shippingAddress.district}` : ""}
                   </p>
                 </div>
                 {selectedOrder.orderNotes && (
@@ -204,6 +222,45 @@ export default function AdminOrdersClient() {
                     <p className="font-bold italic">{selectedOrder.orderNotes}</p>
                   </div>
                 )}
+              </div>
+
+              {/* Payment Details Section (bKash/Nagad) */}
+              {selectedOrder.paymentDetails && (
+                <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-primary">
+                    <FaCreditCard />
+                    <span>Transaction Information ({selectedOrder.paymentMethod?.toUpperCase()})</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-base-content/60">Sender Phone:</span>{" "}
+                      <span className="font-bold">{selectedOrder.paymentDetails.senderPhone || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-base-content/60">TrxID:</span>{" "}
+                      <span className="font-mono font-bold bg-base-200 px-2 py-0.5 rounded text-primary">
+                        {selectedOrder.paymentDetails.trxId || "N/A"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Payment Status Update Controls */}
+              <div className="flex justify-between items-center bg-base-200/30 p-3 rounded-2xl border border-base-200">
+                <span className="font-bold text-xs">Payment Verification Status:</span>
+                <select
+                  value={selectedOrder.paymentStatus || "Unpaid"}
+                  disabled={updatingId === selectedOrder._id}
+                  onChange={(e) => handleStatusChange(selectedOrder._id, e.target.value, true)}
+                  className="select select-bordered select-xs rounded-xl font-bold"
+                >
+                  <option value="Unpaid">Unpaid</option>
+                  <option value="Pending Verification">Pending Verification</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Failed">Failed</option>
+                  <option value="Refunded">Refunded</option>
+                </select>
               </div>
 
               <div>
