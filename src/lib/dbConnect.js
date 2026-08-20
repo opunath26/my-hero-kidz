@@ -12,6 +12,7 @@ export const collection = {
   CARTS: "carts",
   ORDERS: "orders",
   USERS: "users",
+  REVIEWS: "reviews",
 };
 
 let cached = global.mongoose;

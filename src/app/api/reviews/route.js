@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { collection } from "@/lib/dbConnect";
+import dbConnect, { collection } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 
+// 1. GET Method
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,8 +15,7 @@ export async function GET(request) {
       );
     }
 
-    // DB Collection
-    const reviewsCollection = await collection("reviews");
+    const reviewsCollection = await dbConnect(collection.REVIEWS || "reviews");
 
     const reviews = await reviewsCollection
       .find({ productId: String(productId) })
@@ -32,12 +32,12 @@ export async function GET(request) {
   }
 }
 
+// 2. POST Method
 export async function POST(request) {
   try {
     const body = await request.json();
     const { productId, rating, comment, images, userName, userImage } = body;
 
-    // Validation
     if (!productId || !comment || !rating) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -45,46 +45,44 @@ export async function POST(request) {
       );
     }
 
-    const reviewsCollection = await collection("reviews");
-    const productsCollection = await collection("products");
+    const reviewsCollection = await dbConnect(collection.REVIEWS || "reviews");
 
     const newReview = {
       productId: String(productId),
       rating: Number(rating),
       comment,
-      images: images || [],
-      userName: userName || "Anonymous User",
+      images: Array.isArray(images) ? images : [],
+      userName: userName || "Verified Customer",
       userImage: userImage || "",
       createdAt: new Date(),
     };
 
     const result = await reviewsCollection.insertOne(newReview);
 
-    const allReviews = await reviewsCollection
-      .find({ productId: String(productId) })
-      .toArray();
-
-    const avgRating = (
-      allReviews.reduce((acc, curr) => acc + curr.rating, 0) / allReviews.length
-    ).toFixed(1);
-
     try {
+      const productsCollection = await dbConnect(collection.PRODUCTS);
+
+      const allReviews = await reviewsCollection
+        .find({ productId: String(productId) })
+        .toArray();
+
+      const avgRating = (
+        allReviews.reduce((acc, curr) => acc + (Number(curr.rating) || 0), 0) / allReviews.length
+      ).toFixed(1);
+
       let queryFilter = { _id: String(productId) };
-      if (ObjectId.isValid(productId)) {
+      if (ObjectId.isValid(productId) && String(new ObjectId(productId)) === String(productId)) {
         queryFilter = { _id: new ObjectId(productId) };
       }
 
-      await productsCollection.updateOne(
-        queryFilter,
-        { 
-          $set: { 
-            ratings: Number(avgRating),
-            reviewCount: allReviews.length 
-          } 
-        }
-      );
-    } catch (dbErr) {
-      console.warn("Product average rating update warning:", dbErr);
+      await productsCollection.updateOne(queryFilter, {
+        $set: {
+          ratings: Number(avgRating),
+          reviewCount: allReviews.length,
+        },
+      });
+    } catch (productUpdateErr) {
+      console.warn("Product rating update failed:", productUpdateErr.message);
     }
 
     return NextResponse.json(
@@ -98,7 +96,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error adding review:", error);
     return NextResponse.json(
-      { error: "Failed to add review" },
+      { error: error?.message || "Failed to add review" },
       { status: 500 }
     );
   }
