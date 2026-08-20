@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FaStar, FaTruck, FaShieldAlt, FaUndo, FaChevronRight } from 'react-icons/fa';
 import AddToCartSection from './AddToCartSection';
 import RelatedProducts from './RelatedProducts';
+import ProductReviews from './ProductReviews';
 
 export default function ProductDetailsClient({ product, relatedProducts = [] }) {
     if (!product || !product.title) {
@@ -20,7 +21,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
         );
     }
 
-    const { _id, id, title, image, price, discount, ratings, description, inStock = true } = product;
+    const { _id, id, title, image, price, discount, ratings, description, inStock = true, reviews = [] } = product;
     const productId = id || _id;
     const hasDiscount = discount > 0;
     const discountedPrice = hasDiscount ? Math.round(price - (price * discount) / 100) : price;
@@ -28,7 +29,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
     return (
         <div className="bg-slate-50/50 py-8 min-h-screen">
             <div className="mx-auto px-4 max-w-7xl">
-                
+
                 {/* 1. Breadcrumb Navigation */}
                 <nav className="flex items-center gap-2 mb-6 font-medium text-slate-500 text-sm">
                     <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -41,7 +42,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                 {/* 2. Main Product Hero Section */}
                 <div className="bg-white shadow-sm p-6 md:p-8 border border-slate-200/80 rounded-3xl">
                     <div className="gap-10 md:gap-12 grid grid-cols-1 lg:grid-cols-12">
-                        
+
                         {/* Left: Product Image */}
                         <div className="lg:col-span-5">
                             <div className="group relative flex justify-center items-center bg-slate-50/80 p-6 border border-slate-100 rounded-2xl w-full aspect-square overflow-hidden">
@@ -65,7 +66,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                         {/* Right: Product Info & Actions */}
                         <div className="flex flex-col justify-between lg:col-span-7">
                             <div className="space-y-5">
-                                
+
                                 {/* Stock Status Badge */}
                                 <div className="flex items-center gap-3">
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${inStock ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}`}>
@@ -88,7 +89,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                                         <span className="font-bold text-slate-800">{ratings || "4.8"}</span>
                                     </div>
                                     <span className="text-slate-400 text-sm">|</span>
-                                    <span className="font-medium text-slate-500 text-sm">124 Verified Reviews</span>
+                                    <span className="font-medium text-slate-500 text-sm">{reviews.length || 124} Verified Reviews</span>
                                 </div>
 
                                 {/* Pricing Card */}
@@ -112,9 +113,9 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                                 <hr className="border-slate-100" />
 
                                 {/* Action Buttons Component */}
-                                <AddToCartSection 
-                                    product={{ ...product, discountedPrice }} 
-                                    inStock={inStock} 
+                                <AddToCartSection
+                                    product={{ ...product, discountedPrice }}
+                                    inStock={inStock}
                                 />
                             </div>
 
@@ -155,7 +156,14 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                     </div>
                 </div>
 
-                {/* 3. Related Products Slider */}
+                {/* 3. Product Reviews & Ratings Section */}
+                <ProductReviews
+                    productId={productId}
+                    reviews={Array.isArray(product?.reviews) ? product.reviews : []}
+                    userSession={null}
+                />
+
+                {/* 4. Related Products Slider */}
                 <div className="mt-14">
                     <RelatedProducts products={relatedProducts} />
                 </div>
