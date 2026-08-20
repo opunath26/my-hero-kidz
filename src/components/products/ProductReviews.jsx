@@ -19,8 +19,16 @@ export default function ProductReviews({ productId, reviews = [], userSession })
     }
   }, [reviews]);
 
+  useEffect(() => {
+    return () => {
+      selectedImages.forEach((img) => {
+        if (img.preview) URL.revokeObjectURL(img.preview);
+      });
+    };
+  }, [selectedImages]);
+
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files || []);
     if (files.length + selectedImages.length > 3) {
       alert("You can upload a maximum of 3 images.");
       return;
@@ -35,7 +43,11 @@ export default function ProductReviews({ productId, reviews = [], userSession })
   };
 
   const removeImage = (index) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+    setSelectedImages((prev) => {
+      const target = prev[index];
+      if (target?.preview) URL.revokeObjectURL(target.preview);
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const handleSubmitReview = async (e) => {
@@ -52,8 +64,8 @@ export default function ProductReviews({ productId, reviews = [], userSession })
       const imageUrls = selectedImages.map((img) => img.preview);
 
       const newReviewPayload = {
-        productId,
-        rating,
+        productId: String(productId),
+        rating: Number(rating),
         comment,
         images: imageUrls,
         userName: userSession?.user?.name || "Verified Customer",
@@ -67,38 +79,39 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         body: JSON.stringify(newReviewPayload),
       });
 
-      if (res.ok) {
-        const savedReview = await res.json();
-        setReviewList((prev) => [savedReview.review || newReviewPayload, ...prev]);
-      } else {
-        setReviewList((prev) => [newReviewPayload, ...prev]);
-      }
+      const data = await res.json();
 
-      setComment("");
-      setSelectedImages([]);
-      setRating(5);
-      alert("Thank you! Your review has been added.");
+      if (res.ok && data.success) {
+        setReviewList((prev) => [data.review || newReviewPayload, ...prev]);
+        setComment("");
+        setSelectedImages([]);
+        setRating(5);
+        alert("Thank you! Your review has been added.");
+      } else {
+        alert(data.error || "Failed to submit review.");
+      }
     } catch (error) {
       console.error("Error submitting review:", error);
+      alert("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ২. Safe Array variables
+  // Safe Array variables
   const safeReviews = Array.isArray(reviewList) ? reviewList : [];
   const totalReviews = safeReviews.length;
   const avgRating = totalReviews
-    ? (safeReviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / totalReviews).toFixed(1)
+    ? (safeReviews.reduce((acc, curr) => acc + (Number(curr.rating) || 0), 0) / totalReviews).toFixed(1)
     : "0.0";
 
-  const getStarCount = (star) => safeReviews.filter((r) => Math.round(r.rating) === star).length;
+  const getStarCount = (star) => safeReviews.filter((r) => Math.round(Number(r.rating)) === star).length;
 
-  // ৩. Safe Filtering
+  // Safe Filtering
   const filteredReviews = safeReviews.filter((r) => {
     if (activeFilter === "with-media") return r.images && r.images.length > 0;
-    if (activeFilter === "5-star") return r.rating === 5;
-    if (activeFilter === "4-star") return r.rating === 4;
+    if (activeFilter === "5-star") return Math.round(Number(r.rating)) === 5;
+    if (activeFilter === "4-star") return Math.round(Number(r.rating)) === 4;
     return true;
   });
 
@@ -193,7 +206,7 @@ export default function ProductReviews({ productId, reviews = [], userSession })
 
               {selectedImages.map((img, idx) => (
                 <div key={idx} className="group relative border rounded-lg w-12 h-12 overflow-hidden">
-                  <Image src={img.preview} alt="preview" fill className="object-cover" />
+                  <img src={img.preview} alt="preview" className="w-full h-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImage(idx)}
@@ -249,16 +262,14 @@ export default function ProductReviews({ productId, reviews = [], userSession })
           </p>
         ) : (
           filteredReviews.map((rev, idx) => (
-            <div key={idx} className="pb-6 border-slate-100 border-b last:border-b-0">
+            <div key={rev._id || idx} className="pb-6 border-slate-100 border-b last:border-b-0">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex items-center gap-3">
                   {rev.userImage ? (
-                    <Image
+                    <img
                       src={rev.userImage}
                       alt={rev.userName || "User"}
-                      width={38}
-                      height={38}
-                      className="rounded-full object-cover"
+                      className="rounded-full w-9 h-9 object-cover"
                     />
                   ) : (
                     <FaUserCircle className="text-slate-300 text-3xl" />
@@ -280,7 +291,7 @@ export default function ProductReviews({ productId, reviews = [], userSession })
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
                       key={star}
-                      className={star <= rev.rating ? "text-amber-400" : "text-slate-200"}
+                      className={star <= Math.round(Number(rev.rating)) ? "text-amber-400" : "text-slate-200"}
                     />
                   ))}
                 </div>
@@ -297,7 +308,7 @@ export default function ProductReviews({ productId, reviews = [], userSession })
                       key={imgIdx}
                       className="relative hover:opacity-90 border rounded-xl w-16 h-16 overflow-hidden cursor-pointer"
                     >
-                      <Image src={imgUrl} alt="Review attachment" fill className="object-cover" />
+                      <img src={imgUrl} alt="Review attachment" className="w-full h-full object-cover" />
                     </div>
                   ))}
                 </div>
