@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { FaStar, FaRegStar, FaCamera, FaCheckCircle, FaUserCircle } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function ProductReviews({ productId, reviews = [], userSession }) {
   const [reviewList, setReviewList] = useState(Array.isArray(reviews) ? reviews : []);
@@ -11,14 +12,30 @@ export default function ProductReviews({ productId, reviews = [], userSession })
   const [comment, setComment] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
 
-  useEffect(() => {
-    if (Array.isArray(reviews)) {
-      setReviewList(reviews);
+  const fetchReviews = useCallback(async () => {
+    if (!productId) return;
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/reviews?productId=${productId}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setReviewList(data.reviews || []);
+      }
+    } catch (error) {
+      console.error("Error fetching updated reviews:", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [reviews]);
+  }, [productId]);
 
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
+
+  // Cleanup object URLs to avoid memory leaks
   useEffect(() => {
     return () => {
       selectedImages.forEach((img) => {
@@ -30,7 +47,7 @@ export default function ProductReviews({ productId, reviews = [], userSession })
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length + selectedImages.length > 3) {
-      alert("You can upload a maximum of 3 images.");
+      toast.error("You can upload a maximum of 3 images.");
       return;
     }
 
@@ -54,7 +71,7 @@ export default function ProductReviews({ productId, reviews = [], userSession })
     e.preventDefault();
 
     if (!comment.trim()) {
-      alert("Please write a comment for your review.");
+      toast.error("Please write a comment for your review.");
       return;
     }
 
@@ -82,17 +99,18 @@ export default function ProductReviews({ productId, reviews = [], userSession })
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setReviewList((prev) => [data.review || newReviewPayload, ...prev]);
         setComment("");
         setSelectedImages([]);
         setRating(5);
-        alert("Thank you! Your review has been added.");
+        toast.success("Thank you! Your review has been added.");
+        
+        await fetchReviews();
       } else {
-        alert(data.error || "Failed to submit review.");
+        toast.error(data.error || "Failed to submit review.");
       }
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -256,7 +274,9 @@ export default function ProductReviews({ productId, reviews = [], userSession })
 
       {/* Review List */}
       <div className="space-y-6">
-        {filteredReviews.length === 0 ? (
+        {isLoading ? (
+          <p className="py-8 font-medium text-slate-400 text-xs text-center">Loading reviews...</p>
+        ) : filteredReviews.length === 0 ? (
           <p className="py-8 font-medium text-slate-400 text-xs text-center">
             No reviews match the selected filter.
           </p>
