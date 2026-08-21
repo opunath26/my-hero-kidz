@@ -5,6 +5,15 @@ import Image from "next/image";
 import { FaStar, FaRegStar, FaCamera, FaCheckCircle, FaUserCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
 
+const convertToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
 export default function ProductReviews({ productId, reviews = [], userSession }) {
   const [reviewList, setReviewList] = useState(Array.isArray(reviews) ? reviews : []);
   const [rating, setRating] = useState(5);
@@ -35,7 +44,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
     fetchReviews();
   }, [fetchReviews]);
 
-  // Cleanup object URLs to avoid memory leaks
   useEffect(() => {
     return () => {
       selectedImages.forEach((img) => {
@@ -78,15 +86,17 @@ export default function ProductReviews({ productId, reviews = [], userSession })
     setIsSubmitting(true);
 
     try {
-      const imageUrls = selectedImages.map((img) => img.preview);
+      const imageUrls = await Promise.all(
+        selectedImages.map((img) => convertToBase64(img.file))
+      );
 
       const newReviewPayload = {
         productId: String(productId),
         rating: Number(rating),
         comment,
         images: imageUrls,
-        userName: userSession?.user?.name || "Verified Customer",
-        userImage: userSession?.user?.image || "",
+        userName: userSession?.user?.name || userSession?.name || "Verified Customer",
+        userImage: userSession?.user?.image || userSession?.image || "",
         createdAt: new Date().toISOString(),
       };
 
@@ -102,8 +112,22 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         setComment("");
         setSelectedImages([]);
         setRating(5);
-        toast.success("Thank you! Your review has been added.");
-        
+
+        toast.success("Thank you! Your review has been added.", {
+          style: {
+            border: "1px solid #f97316",
+            padding: "12px 16px",
+            color: "#fff",
+            background: "#f97316",
+            fontWeight: "600",
+            borderRadius: "12px",
+          },
+          iconTheme: {
+            primary: "#fff",
+            secondary: "#f97316",
+          },
+        });
+
         await fetchReviews();
       } else {
         toast.error(data.error || "Failed to submit review.");
@@ -116,7 +140,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
     }
   };
 
-  // Safe Array variables
   const safeReviews = Array.isArray(reviewList) ? reviewList : [];
   const totalReviews = safeReviews.length;
   const avgRating = totalReviews
@@ -125,7 +148,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
 
   const getStarCount = (star) => safeReviews.filter((r) => Math.round(Number(r.rating)) === star).length;
 
-  // Safe Filtering
   const filteredReviews = safeReviews.filter((r) => {
     if (activeFilter === "with-media") return r.images && r.images.length > 0;
     if (activeFilter === "5-star") return Math.round(Number(r.rating)) === 5;
@@ -139,7 +161,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         Customer Reviews & Ratings
       </h3>
 
-      {/* Summary Section */}
       <div className="items-center gap-6 grid grid-cols-1 md:grid-cols-12 bg-slate-50 mb-8 p-6 border border-slate-100 rounded-2xl">
         <div className="flex flex-col justify-center items-center md:col-span-4 pr-0 md:pr-6 border-slate-200 md:border-r text-center">
           <span className="font-black text-slate-900 text-5xl">{avgRating}</span>
@@ -173,7 +194,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         </div>
       </div>
 
-      {/* Form Section */}
       <div className="bg-slate-50/50 mb-10 p-5 md:p-6 border border-slate-200/60 rounded-2xl">
         <h4 className="mb-3 font-bold text-slate-800 text-base">Write a Product Review</h4>
 
@@ -249,7 +269,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         </form>
       </div>
 
-      {/* Filter Tabs */}
       <div className="flex flex-wrap items-center gap-2 mb-6 pb-4 border-slate-100 border-b">
         <span className="mr-2 font-bold text-slate-500 text-xs">Filter Reviews:</span>
         {[
@@ -272,7 +291,6 @@ export default function ProductReviews({ productId, reviews = [], userSession })
         ))}
       </div>
 
-      {/* Review List */}
       <div className="space-y-6">
         {isLoading ? (
           <p className="py-8 font-medium text-slate-400 text-xs text-center">Loading reviews...</p>

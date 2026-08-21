@@ -3,12 +3,16 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { FaStar, FaTruck, FaShieldAlt, FaUndo, FaChevronRight } from 'react-icons/fa';
 import AddToCartSection from './AddToCartSection';
 import RelatedProducts from './RelatedProducts';
 import ProductReviews from './ProductReviews';
 
-export default function ProductDetailsClient({ product, relatedProducts = [] }) {
+export default function ProductDetailsClient({ product, relatedProducts = [], userSession }) {
+    const { data: session } = useSession();
+    const currentUserSession = userSession || session;
+
     if (!product || !product.title) {
         return (
             <div className="flex flex-col justify-center items-center py-20 min-h-[60vh]">
@@ -160,7 +164,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [] }) 
                 <ProductReviews
                     productId={productId}
                     reviews={Array.isArray(product?.reviews) ? product.reviews : []}
-                    userSession={null}
+                    userSession={currentUserSession}
                 />
 
                 {/* 4. Related Products Slider */}
