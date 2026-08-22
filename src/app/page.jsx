@@ -3,7 +3,6 @@ import VisualBadges from "@/components/home/VisualBadges";
 import AgeFilter from "@/components/home/AgeFilter";
 import HomeProducts from "@/components/home/HomeProducts";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import FunStats from "@/components/home/FunStats";
 import HowItWorks from "@/components/home/HowItWorks";
 import Testimonials from "@/components/home/Testimonials";
 import Newsletter from "@/components/home/Newsletter";
@@ -38,7 +37,6 @@ export default async function Home() {
       {/* 5. Features & Value Propositions */}
       <section className="space-y-16 md:space-y-24">
         <WhyChooseUs />
-        <FunStats />
         <HowItWorks />
         <Testimonials />
         <Newsletter />

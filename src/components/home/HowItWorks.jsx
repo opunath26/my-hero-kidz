@@ -1,88 +1,99 @@
-import React from 'react';
-import { FiShoppingBag, FiCreditCard, FiGift } from 'react-icons/fi';
+import React from "react";
+import { FiShoppingBag, FiCreditCard, FiGift } from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi2";
 
-const HowItWorks = () => {
+export default function HowItWorks() {
   const steps = [
     {
       id: 1,
-      icon: <FiShoppingBag className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />,
+      stepNo: "01",
+      icon: <FiShoppingBag className="w-7 h-7 text-emerald-500" />,
       title: "Discover & Select",
-      description: "Browse our child-safe collection and pick the perfect toys or gear based on your kid's age and interests.",
-      bgColor: "bg-primary/10 text-primary",
-      borderColor: "group-hover:border-primary/30",
+      bnTitle: "পছন্দ করুন",
+      description: "বাচ্চাদের বয়স ও পছন্দ অনুযায়ী আমাদের নিরাপদ ও শিক্ষণীয় খেলনাগুলো ব্রাউজ করুন।",
+      bgColor: "bg-emerald-50 group-hover:bg-emerald-100",
+      borderColor: "hover:border-emerald-300",
     },
     {
       id: 2,
-      icon: <FiCreditCard className="w-7 h-7 text-secondary group-hover:scale-110 transition-transform duration-300" />,
-      title: "Fast & Secure Checkout",
-      description: "Complete your order with our 100% secure payment system. It only takes a few clicks to seal the deal.",
-      bgColor: "bg-secondary/10 text-secondary",
-      borderColor: "group-hover:border-secondary/30",
+      stepNo: "02",
+      icon: <FiCreditCard className="w-7 h-7 text-amber-500" />,
+      title: "Easy Checkout",
+      bnTitle: "অর্ডার কনফার্ম করুন",
+      description: "সহজ ও নিরাপদ ক্যাশ অন ডেলিভারি বা অনলাইন পেমেন্টের মাধ্যমে অর্ডার সম্পন্ন করুন।",
+      bgColor: "bg-amber-50 group-hover:bg-amber-100",
+      borderColor: "hover:border-amber-300",
     },
     {
       id: 3,
-      icon: <FiGift className="w-7 h-7 text-success group-hover:scale-110 transition-transform duration-300" />,
-      title: "Box of Joy Arrives!",
-      description: "Watch your little hero jump with joy as our super-fast delivery bring happiness straight to your doorstep.",
-      bgColor: "bg-success/10 text-success",
-      borderColor: "group-hover:border-success/30",
+      stepNo: "03",
+      icon: <FiGift className="w-7 h-7 text-rose-500" />,
+      title: "Box of Joy Arrives",
+      bnTitle: "উপহার হাতে পান",
+      description: "দ্রুততম ডেলিভারিতে আপনার ঠিকানায় আনন্দের বাক্স পৌঁছে যাবে সন্তানের হাসিমুখ দেখতে।",
+      bgColor: "bg-rose-50 group-hover:bg-rose-100",
+      borderColor: "hover:border-rose-300",
     },
   ];
 
   return (
-    <section className="bg-base-100 py-16 overflow-hidden">
-      <div className="mx-auto px-4 max-w-5xl container">
+    <section className="relative py-12 md:py-16 overflow-hidden bg-slate-50/50">
+      <div className="mx-auto px-4 max-w-7xl container">
         
         {/* Section Header */}
-        <div className="mb-16 text-center">
-          <span className="bg-secondary/10 px-4 py-1.5 rounded-full font-bold text-secondary text-sm uppercase tracking-wider animate-pulse">
-            Easy Process 🚀
-          </span>
-          <h2 className="mt-4 font-black text-base-content text-3xl md:text-4xl tracking-tight">
-            How It <span className="text-secondary decoration-warning decoration-wavy underline">Works</span>
+        <div className="flex flex-col items-center mb-12 md:mb-16 text-center">
+          <div className="inline-flex items-center gap-2 bg-amber-100/80 mb-3 px-4 py-1.5 border border-amber-200/80 rounded-full font-bold text-amber-800 text-xs sm:text-sm">
+            <HiSparkles className="text-amber-500 animate-pulse" />
+            <span className="font-bangla">সহজ ৩ ধাপে শপিং</span>
+          </div>
+
+          <h2 className="font-extrabold text-slate-900 text-2xl sm:text-3xl md:text-4xl tracking-tight">
+            How It <span className="bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500 text-transparent">Works</span>
           </h2>
-          <p className="mx-auto mt-2 max-w-sm text-sm text-base-content/60 md:text-base">
-            Bringing smiles to your little ones is now as easy as 1-2-3!
+
+          <p className="mt-2 font-bangla text-slate-600 text-sm md:text-base max-w-md">
+            আপনার সন্তানের মুখের হাসি ফোটানো এখন আরও সহজ ও আনন্দদায়ক।
           </p>
         </div>
 
-        {/* Steps Container */}
-        <div className="relative gap-10 md:gap-6 grid grid-cols-1 md:grid-cols-3">
-          
-          {/* Connecting Line (Only visible on Desktop) */}
-          <div className="hidden md:block top-12 right-[16%] left-[16%] z-0 absolute border-base-300 border-t-2 border-dashed h-0.5"></div>
-
-          {steps.map((step, index) => (
-            <div 
-              key={step.id} 
-              className="group z-10 relative flex flex-col items-center bg-base-200/30 hover:bg-base-100 hover:shadow-xl p-6 border border-transparent rounded-[2rem] active:scale-95 transition-all hover:-translate-y-2 duration-300 cursor-pointer"
+        {/* Steps Grid */}
+        <div className="relative gap-6 md:gap-8 grid grid-cols-1 md:grid-cols-3">
+          {steps.map((step) => (
+            <div
+              key={step.id}
+              className={`group relative flex flex-col bg-white p-6 md:p-8 border border-slate-200/80 ${step.borderColor} rounded-3xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-slate-200/50 cursor-pointer overflow-hidden`}
             >
-              {/* Step Number Badge inside the card */}
-              <span className="top-4 right-6 absolute font-black text-base-content/10 text-4xl select-none">
-                0{index + 1}
+              {/* Step Number Watermark */}
+              <span className="top-4 right-6 absolute font-black text-slate-100 text-5xl select-none group-hover:text-slate-200 transition-colors">
+                {step.stepNo}
               </span>
 
-              {/* Icon / Circle Badge with rotation & pulse glow on hover */}
-              <div className={`w-20 h-20 rounded-2xl ${step.bgColor} flex items-center justify-center border-4 border-base-100 shadow-md group-hover:rotate-12 transition-all duration-300 mb-6 relative`}>
+              {/* Icon */}
+              <div className={`w-16 h-16 rounded-2xl ${step.bgColor} mb-6 flex items-center justify-center transition-all duration-300 shadow-inner group-hover:scale-110`}>
                 {step.icon}
               </div>
 
-              {/* Step Title */}
-              <h3 className="mb-2 font-extrabold group-hover:text-secondary text-base-content text-lg md:text-xl tracking-tight transition-colors duration-200">
-                {step.title}
-              </h3>
+              {/* Title & Info */}
+              <div className="relative z-10">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-extrabold text-slate-900 text-lg md:text-xl transition-colors">
+                    {step.title}
+                  </h3>
+                </div>
 
-              {/* Step Description */}
-              <p className="max-w-xs font-medium text-sm text-base-content/60 leading-relaxed">
-                {step.description}
-              </p>
+                <p className="mt-0.5 font-bangla font-semibold text-xs text-amber-600">
+                  {step.bnTitle}
+                </p>
+
+                <p className="mt-3 font-bangla text-slate-600 text-xs md:text-sm leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
             </div>
           ))}
-
         </div>
+
       </div>
     </section>
   );
-};
-
-export default HowItWorks;
+}
