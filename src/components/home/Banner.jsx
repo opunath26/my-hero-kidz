@@ -1,69 +1,138 @@
-import React from 'react';
-import Image from 'next/image';
-import { fontBangla } from '@/app/layout';
+"use client";
 
-const Banner = () => {
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FaShoppingBag, FaArrowRight, FaStar, FaShieldAlt, FaSmile } from "react-icons/fa";
+import { HiSparkles } from "react-icons/hi2";
+
+export default function Banner() {
     return (
-        <div className="relative bg-gradient-to-br from-amber-50/60 via-white to-primary/5 my-6 p-8 md:p-16 rounded-3xl overflow-hidden">
-            <div className="flex md:flex-row flex-col-reverse justify-between items-center gap-12 mx-auto max-w-7xl">
+        <div className="relative bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-slate-50 border border-amber-100/80 rounded-3xl md:rounded-[2.5rem] overflow-hidden">
 
-                {/* Left Content Column */}
-                <div className="z-10 flex-1 space-y-6 md:text-left text-center">
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-semibold text-primary text-sm tracking-wide">
-                        ✨ Kids Care & Toy Shop
+            {/* Decorative Floating Background Glows */}
+            <div className="top-[-10%] right-[-5%] -z-0 absolute bg-amber-200/40 blur-3xl rounded-full w-72 md:w-96 h-72 md:h-96 pointer-events-none" />
+            <div className="bottom-[-10%] left-[-5%] -z-0 absolute bg-orange-200/40 blur-3xl rounded-full w-64 md:w-80 h-64 md:h-80 pointer-events-none" />
+
+            <div className="z-10 relative items-center gap-8 md:gap-12 grid grid-cols-1 lg:grid-cols-12 px-6 md:px-12 lg:px-16 py-10 md:py-16">
+
+                {/* Left Content */}
+                <div className="space-y-6 lg:col-span-7 lg:text-left text-center">
+
+                    {/* Top Badge */}
+                    <div className="inline-flex items-center gap-2 bg-amber-100/90 shadow-sm px-4 py-1.5 border border-amber-200/70 rounded-full font-bold text-amber-800 text-xs md:text-sm">
+                        <HiSparkles className="text-amber-500 text-base animate-pulse" />
+                        <span className="font-bangla">মেধা বিকাশে সেরা পছন্দ</span>
                     </div>
 
                     {/* Main Heading */}
-                    <h1 className={`${fontBangla.className} font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-800 leading-tight md:leading-[1.2]`}>
-                        আপনার শিশুকে দিন একটি <br />
-                        <span className="bg-clip-text bg-gradient-to-r from-primary to-orange-500 text-primary text-transparent">
-                            সুন্দর ভবিষ্যৎ
+                    <h1 className="font-extrabold text-slate-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight md:leading-[1.15]">
+                        <span className="block font-bangla text-primary">
+                            বাচ্চাদের মেধা বিকাশে
+                        </span>
+                        <span className="block mt-1">
+                            Fun & Educational Toys
                         </span>
                     </h1>
 
-                    {/* Subtitle / Offer */}
-                    <p className="mx-auto md:mx-0 max-w-md text-slate-600 text-base sm:text-lg">
-                        Explore our exclusive collection. Buy every premium toy with up to
-                        <span className="bg-orange-50 mx-1 px-2 py-0.5 rounded font-bold text-orange-500">15% Discount</span>!
+                    {/* Subtitle */}
+                    <p className="mx-auto lg:mx-0 max-w-xl font-bangla text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed">
+                        স্মার্ট কার্ড, পাজল এবং ক্রিয়েটিভ লার্নিং টয় দিয়ে আপনার সন্তানের শেখার অভিজ্ঞতাকে করুন আরও আনন্দদায়ক ও নিরাপদ।
                     </p>
 
-                    {/* Action Button */}
-                    <div className="pt-2">
-                        <button className="group inline-flex relative justify-center items-center bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 px-8 py-3.5 rounded-2xl font-semibold text-white text-lg transition-all hover:-translate-y-0.5 active:translate-y-0 duration-300">
-                            Shop Now
-                            <svg
-                                className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1 duration-300"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </button>
+                    {/* Action Buttons */}
+                    <div className="flex sm:flex-row flex-col justify-center lg:justify-start items-center gap-3 md:gap-4 pt-2">
+                        <Link
+                            href="/products"
+                            className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25 px-7 py-3.5 rounded-2xl w-full sm:w-auto font-extrabold text-white text-sm md:text-base transition-all hover:-translate-y-0.5 active:translate-y-0"
+                        >
+                            <FaShoppingBag className="text-sm" />
+                            <span className="font-bangla">এখনই কেনাকাটা করুন</span>
+                        </Link>
+
+                        <Link
+                            href="/#categories"
+                            className="flex justify-center items-center gap-2 bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm px-7 py-3.5 border border-slate-200/80 hover:border-slate-300 rounded-2xl w-full sm:w-auto font-bold text-slate-700 text-sm md:text-base transition-all"
+                        >
+                            <span>Explore Categories</span>
+                            <FaArrowRight className="text-xs" />
+                        </Link>
                     </div>
+
+                    {/* Trust Metrics Section */}
+                    <div className="flex justify-center lg:justify-start items-center gap-6 md:gap-8 pt-6 border-slate-200/80 border-t">
+                        <div className="flex items-center gap-2">
+                            <div className="flex justify-center items-center bg-amber-100 p-2 rounded-xl text-amber-600">
+                                <FaSmile className="text-lg" />
+                            </div>
+                            <div className="text-left">
+                                <p className="font-black text-slate-900 text-base md:text-lg leading-none">১০k+</p>
+                                <p className="mt-1 font-bangla text-slate-500 text-xs">হ্যাপি কাস্টমার</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-300/70 w-px h-8" />
+
+                        <div className="flex items-center gap-2">
+                            <div className="flex justify-center items-center bg-emerald-100 p-2 rounded-xl text-emerald-600">
+                                <FaShieldAlt className="text-lg" />
+                            </div>
+                            <div className="text-left">
+                                <p className="font-black text-slate-900 text-base md:text-lg leading-none">১০০%</p>
+                                <p className="mt-1 font-bangla text-slate-500 text-xs">নিরাপদ মেটেরিয়াল</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-300/70 w-px h-8" />
+
+                        <div className="flex items-center gap-2">
+                            <div className="flex justify-center items-center bg-orange-100 p-2 rounded-xl text-orange-500">
+                                <FaStar className="text-lg" />
+                            </div>
+                            <div className="text-left">
+                                <p className="font-black text-slate-900 text-base md:text-lg leading-none">৪.৮★</p>
+                                <p className="mt-1 font-bangla text-slate-500 text-xs">অভিভাবকদের রেটিং</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                {/* Right Image Column */}
-                <div className="relative flex flex-1 justify-center items-center w-full">
-                    {/* Background Decorative Blob for Visual Pop */}
-                    <div className="-z-10 absolute bg-gradient-to-tr from-amber-200 to-primary/30 opacity-60 blur-3xl rounded-full w-64 sm:w-80 h-64 sm:h-80 animate-pulse filter" />
+                {/* Right Image Banner Section Container */}
+                <div className="flex justify-center items-center lg:col-span-5">
+                    <div className="relative bg-white/70 shadow-amber-900/5 shadow-xl backdrop-blur-md p-4 border border-white/80 rounded-3xl w-full lg:max-w-none max-w-md h-[380px] sm:h-[420px] md:h-[460px] overflow-hidden">
 
-                    <div className="relative w-full max-w-[450px] md:max-w-full aspect-[4/3] md:aspect-auto">
-                        <Image
-                            alt="Buy Every toy with up to 15% Discount"
-                            src="/assets/hero.png"
-                            width={550}
-                            height={450}
-                            priority
-                            className="drop-shadow-[0_20px_30px_rgba(0,0,0,0.1)] object-contain hover:scale-[1.02] transition-transform duration-500"
-                        />
+                        {/* Top Floating Offer Badge */}
+                        <div className="top-4 left-4 z-20 absolute bg-gradient-to-r from-rose-500 to-pink-500 shadow-lg shadow-rose-500/30 px-4 py-2 rounded-2xl font-black text-white text-xs md:text-sm -rotate-6">
+                            Up to 20% OFF!
+                        </div>
+
+                        {/* Bottom Floating Feature Card */}
+                        <div className="right-4 bottom-4 z-20 absolute flex items-center gap-2.5 bg-white/95 shadow-lg backdrop-blur-md p-2.5 pr-4 border border-slate-100 rounded-2xl">
+                            <span className="flex justify-center items-center bg-amber-500 rounded-xl w-8 h-8 font-bold text-white text-xs">
+                                🎁
+                            </span>
+                            <div className="text-left">
+                                <p className="font-bold text-slate-800 text-xs">Fast Shipping</p>
+                                <p className="font-bangla text-[10px] text-slate-500">সারাদেশে হোম ডেলিভারি</p>
+                            </div>
+                        </div>
+
+                        {/* Main Image Container */}
+                        <div className="relative flex justify-center items-center w-full h-full">
+                            <Image
+                                src="/assets/hero.png"
+                                alt="Hero Kidz Featured Products"
+                                fill
+                                priority
+                                className="drop-shadow-[0_15px_25px_rgba(0,0,0,0.08)] object-center object-contain hover:scale-105 transition-transform duration-500"
+                            />
+                        </div>
+
                     </div>
                 </div>
 
             </div>
         </div>
     );
-};
-
-export default Banner;
+}
