@@ -7,23 +7,60 @@
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  /* Brand */
-  --color-primary: oklch(65% 0.23 35);
-  --color-secondary: oklch(58% 0.18 30);
-  --color-accent: oklch(72% 0.20 55);
+  /* Brand Colors - Bright Vibrant Kids Theme */
+  --color-primary: oklch(65% 0.23 35);        /* Vibrant Orange */
+  --color-secondary: oklch(58% 0.18 30);      /* Warm Coral / Deep Orange */
+  --color-accent: oklch(78% 0.18 85);         /* Playful Yellow / Amber */
 
-  /* Base */
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(97% 0.01 95);
-  --color-base-300: oklch(92% 0.015 95);
+  /* Base Backgrounds */
+  --color-base-100: oklch(100% 0 0);         /* Pure White */
+  --color-base-200: oklch(98% 0.005 85);      /* Soft Warm Gray Background */
+  --color-base-300: oklch(93% 0.01 85);       /* Subtle Border / Divider */
 
-  /* Neutral */
-  --color-neutral: oklch(35% 0.01 260);
-  --color-neutral-content: oklch(96% 0 0);
+  /* Neutral Texts */
+  --color-neutral: oklch(25% 0.02 260);       /* Deep Slate Text */
+  --color-neutral-content: oklch(98% 0 0);
 
-  /* Feedback */
-  --color-success: oklch(70% 0.17 145);
-  --color-error: oklch(62% 0.24 28);
+  /* Feedback Colors */
+  --color-success: oklch(70% 0.17 145);       /* Soft Green */
+  --color-error: oklch(62% 0.24 28);          /* Rose Red */
 }
 
 @custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
+
+/* Global Base Styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color: oklch(25% 0.02 260);
+    background-color: oklch(98% 0.005 85);
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Font Utilities */
+.font-bangla {
+  font-family: var(--font-bangla), sans-serif;
+}
+
+.font-english {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

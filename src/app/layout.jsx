@@ -10,10 +10,12 @@ import { Toaster } from "react-hot-toast";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "400", "500", "600", "800"],
+  variable: "--font-poppins",
 });
 
 export const fontBangla = localFont({
-  src: './../fonts/mayaboti-normal.ttf',
+  src: "./../fonts/mayaboti-normal.ttf",
+  variable: "--font-bangla",
 });
 
 export const metadata = {
@@ -61,7 +63,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${poppins.className} antialiased`}
+      className={`${poppins.variable} ${fontBangla.variable} ${poppins.className} antialiased`}
     >
       <body className="flex flex-col min-h-screen"> 
         <AuthProvider>
