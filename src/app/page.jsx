@@ -8,6 +8,7 @@ import Testimonials from "@/components/home/Testimonials";
 import Newsletter from "@/components/home/Newsletter";
 
 import { getProducts } from "@/actions/product";
+import FlashDealBanner from "@/components/home/FlashDealBanner";
 
 export default async function Home() {
   const products = (await getProducts()) || [];
@@ -17,6 +18,9 @@ export default async function Home() {
       {/* 1. Hero Section */}
       <section>
         <Banner />
+      </section>
+      <section>
+        <FlashDealBanner />
       </section>
 
       {/* 2. Trust Badges right after banner */}
