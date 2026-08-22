@@ -9,6 +9,7 @@ import Newsletter from "@/components/home/Newsletter";
 
 import { getProducts } from "@/actions/product";
 import FlashDealBanner from "@/components/home/FlashDealBanner";
+import CustomerGallery from "@/components/home/CustomerGallery";
 
 export default async function Home() {
   const products = (await getProducts()) || [];
@@ -43,6 +44,7 @@ export default async function Home() {
         <WhyChooseUs />
         <HowItWorks />
         <Testimonials />
+        <CustomerGallery />
         <Newsletter />
       </section>
     </div>
