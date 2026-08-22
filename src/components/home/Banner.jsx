@@ -125,6 +125,7 @@ export default function Banner() {
                                 alt="Hero Kidz Featured Products"
                                 fill
                                 priority
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                                 className="drop-shadow-[0_15px_25px_rgba(0,0,0,0.08)] object-center object-contain hover:scale-105 transition-transform duration-500"
                             />
                         </div>
