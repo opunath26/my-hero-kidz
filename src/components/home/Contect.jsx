@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaPaperPlane, FaChild } from 'react-icons/fa';
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaPaperPlane, FaChild, FaQuestionCircle } from 'react-icons/fa';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ const Contact = () => {
         message: ''
     });
     const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,12 +23,14 @@ const Contact = () => {
         setLoading(true);
 
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             console.log("Form Submitted Successfully:", formData);
-            alert("Thank you for reaching out! Your message has been sent successfully. 🎁");
+            setSubmitted(true);
             setFormData({ name: '', email: '', subject: '', message: '' });
+            setTimeout(() => setSubmitted(false), 5000);
         } catch (error) {
             console.error("Submission Error:", error);
-            alert("Something went wrong. Please try again later.");
+            alert("দুঃখিত! কোনো সমস্যা হয়েছে। আবার চেষ্টা করুন।");
         } finally {
             setLoading(false);
         }
@@ -36,89 +39,99 @@ const Contact = () => {
     const infoCards = [
         {
             id: 1,
-            title: "Call Us",
-            detail: "+880 1234-567890",
-            subDetail: "Sat - Thu: 9 AM - 6 PM",
+            title: "সরাসরি কল করুন",
+            detail: "+880 1700-000000",
+            subDetail: "Sat - Thu: 9 AM - 8 PM",
             icon: <FaPhoneAlt />,
-            bgColor: "bg-primary/10 text-primary",
-            hoverBorder: "hover:border-primary/30"
+            badgeBg: "bg-orange-100 text-[#FF4500] border-orange-200"
         },
         {
             id: 2,
-            title: "Email Us",
+            title: "ইমেইল পাঠান",
             detail: "support@herokidz.com",
-            subDetail: "Response within 24 hours",
+            subDetail: "২৪ ঘণ্টার মধ্যে রিপ্লাই পাবেন",
             icon: <FaEnvelope />,
-            bgColor: "bg-success/10 text-success",
-            hoverBorder: "hover:border-success/30"
+            badgeBg: "bg-amber-100 text-amber-600 border-amber-200"
         },
         {
             id: 3,
-            title: "Our Store",
+            title: "আমাদের শোরুম",
             detail: "Level 4, Toy Kingdom Plaza",
             subDetail: "Banani, Dhaka, Bangladesh",
             icon: <FaMapMarkerAlt />,
-            bgColor: "bg-warning/10 text-warning",
-            hoverBorder: "hover:border-warning/30"
+            badgeBg: "bg-orange-100 text-[#FF4500] border-orange-200"
         }
     ];
 
     return (
-        <section className="bg-base-100 py-16 overflow-hidden">
+        <section className="bg-[#FFFDF9] py-12 lg:py-16 text-slate-800 overflow-hidden">
             <div className="mx-auto px-4 max-w-6xl container">
                 
                 {/* Header Section */}
-                <div className="mb-14 text-center">
-                    <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-black text-primary text-sm uppercase tracking-wider animate-pulse">
-                        <FaChild className="animate-bounce" /> Contact Our Team 👋
+                <div className="mb-12 text-center">
+                    <span className="inline-flex items-center gap-2 bg-amber-100/80 px-4 py-1.5 rounded-full font-bold text-amber-800 text-xs sm:text-sm tracking-wider">
+                        <FaChild className="text-[#FF4500]" /> যেকোনো প্রয়োজনে কথা বলুন 👋
                     </span>
-                    <h2 className="mt-4 font-black text-base-content text-3xl md:text-5xl leading-none tracking-tight">
-                        Have Questions? <br />
-                        <span className="text-primary decoration-warning decoration-wavy underline">We'd Love to Hear From You!</span>
+                    
+                    <h2 className="mt-4 font-black text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight">
+                        <span className="text-[#FF4500]">খেলনা বা যেকোনো প্রশ্নের জন্য</span> <br />
+                        <span className="text-slate-900 font-extrabold">We'd Love to Hear From You!</span>
                     </h2>
-                    <p className="mx-auto mt-3 max-w-xl text-sm text-base-content/60 md:text-base">
-                        Whether you have a question about our toys, shipping, or anything else, our friendly team is ready to answer all your queries.
+                    
+                    <p className="mx-auto mt-3 max-w-xl text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed">
+                        স্মার্ট কার্ড, পাজল বা লার্নিং টয় বিষয়ক যেকোনো তথ্য জানতে বা অর্ডারের বিষয়ে আমাদের ফ্রেন্ডলি টিমের সাথে যোগাযোগ করুন।
                     </p>
                 </div>
 
-                <div className="gap-8 grid grid-cols-1 lg:grid-cols-3 px-2">
-                    {/* Contact Info Cards */}
-                    <div className="space-y-6 lg:col-span-1">
-                        {infoCards.map((card) => (
-                            <div 
-                                key={card.id}
-                                className={`group flex items-center gap-5 bg-base-200/40 hover:bg-base-100 shadow-sm border border-base-300/80 ${card.hoverBorder} rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:rotate-1 hover:shadow-xl cursor-pointer`}
-                            >
-                                <div className={`p-4 rounded-2xl ${card.bgColor} text-xl flex items-center justify-center shadow-inner transition-all duration-300 group-hover:animate-bounce`}>
-                                    {card.icon}
-                                </div>
-                                <div>
-                                    <h3 className="font-extrabold text-base-content text-lg leading-tight">{card.title}</h3>
-                                    <p className="mt-1 font-bold text-sm text-base-content/80">{card.detail}</p>
-                                    <p className="mt-0.5 font-medium text-xs text-base-content/40">{card.subDetail}</p>
-                                </div>
+                {/* Info Cards */}
+                <div className="gap-6 grid grid-cols-1 md:grid-cols-3 mb-12">
+                    {infoCards.map((card) => (
+                        <div 
+                            key={card.id}
+                            className="group flex items-center gap-4 bg-white shadow-sm hover:shadow-xl p-6 border border-orange-100 hover:border-[#FF4500]/40 rounded-3xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                        >
+                            <div className={`p-4 rounded-2xl border text-xl flex items-center justify-center ${card.badgeBg} group-hover:scale-110 transition-transform`}>
+                                {card.icon}
                             </div>
-                        ))}
-                    </div>
+                            <div>
+                                <h3 className="font-bold text-base sm:text-lg text-slate-900">{card.title}</h3>
+                                <p className="mt-0.5 font-bold text-[#FF4500] text-xs sm:text-sm">{card.detail}</p>
+                                <p className="mt-0.5 font-medium text-slate-400 text-[11px] sm:text-xs">{card.subDetail}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
 
-                    {/* Contact Form Container */}
-                    <div className="lg:col-span-2 bg-base-200/30 shadow-sm p-6 md:p-8 border border-base-300/60 rounded-[2.5rem]">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
-                                <div className="space-y-2">
-                                    <label className="px-1 font-extrabold text-sm text-base-content/80">Your Name</label>
+                {/* Main Section: Form + Map */}
+                <div className="gap-8 grid grid-cols-1 lg:grid-cols-12">
+                    
+                    {/* Contact Form */}
+                    <div className="lg:col-span-7 bg-white shadow-sm p-6 sm:p-8 border border-orange-100 rounded-[2rem]">
+                        <h3 className="font-extrabold text-xl sm:text-2xl text-slate-900">মেসেজ পাঠান</h3>
+                        <p className="mb-6 text-slate-500 text-xs sm:text-sm">নিচের ফর্মটি পূরণ করে আপনার প্রশ্ন বা মতামত জানান।</p>
+
+                        {submitted && (
+                            <div className="bg-emerald-50 mb-6 p-4 border border-emerald-200 rounded-2xl text-emerald-800 text-xs sm:text-sm font-bold">
+                                🎉 ধন্যবাদ! আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে। আমরা দ্রুত যোগাযোগ করবো।
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
+                                <div className="space-y-1.5">
+                                    <label className="font-bold text-xs text-slate-700">আপনার নাম <span className="text-[#FF4500]">*</span></label>
                                     <input 
                                         type="text" 
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
-                                        placeholder="John Doe" 
-                                        className="bg-base-100 shadow-inner px-4 py-3 border-2 border-transparent focus:border-primary/40 rounded-2xl focus:outline-none w-full font-bold text-sm text-base-content transition-all placeholder-gray-400"
+                                        placeholder="যেমন: অপূ নাথ" 
+                                        className="bg-slate-50 focus:bg-white px-4 py-3 border border-slate-200 focus:border-[#FF4500] rounded-2xl focus:outline-none w-full font-semibold text-xs sm:text-sm transition-all"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="px-1 font-extrabold text-sm text-base-content/80">Email Address</label>
+                                <div className="space-y-1.5">
+                                    <label className="font-bold text-xs text-slate-700">ইমেইল এড্রেস <span className="text-[#FF4500]">*</span></label>
                                     <input 
                                         type="email" 
                                         name="email"
@@ -126,13 +139,13 @@ const Contact = () => {
                                         onChange={handleChange}
                                         required
                                         placeholder="johndoe@example.com" 
-                                        className="bg-base-100 shadow-inner px-4 py-3 border-2 border-transparent focus:border-primary/40 rounded-2xl focus:outline-none w-full font-bold text-sm text-base-content transition-all placeholder-gray-400"
+                                        className="bg-slate-50 focus:bg-white px-4 py-3 border border-slate-200 focus:border-[#FF4500] rounded-2xl focus:outline-none w-full font-semibold text-xs sm:text-sm transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="px-1 font-extrabold text-sm text-base-content/80">Subject</label>
+                            <div className="space-y-1.5">
+                                <label className="font-bold text-xs text-slate-700">বিষয় / Subject <span className="text-[#FF4500]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="subject"
@@ -140,36 +153,66 @@ const Contact = () => {
                                     onChange={handleChange}
                                     required
                                     placeholder="How can we help your little hero?" 
-                                    className="bg-base-100 shadow-inner px-4 py-3 border-2 border-transparent focus:border-primary/40 rounded-2xl focus:outline-none w-full font-bold text-sm text-base-content transition-all placeholder-gray-400"
+                                    className="bg-slate-50 focus:bg-white px-4 py-3 border border-slate-200 focus:border-[#FF4500] rounded-2xl focus:outline-none w-full font-semibold text-xs sm:text-sm transition-all"
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="px-1 font-extrabold text-sm text-base-content/80">Message</label>
+                            <div className="space-y-1.5">
+                                <label className="font-bold text-xs text-slate-700">আপনার মেসেজ <span className="text-[#FF4500]">*</span></label>
                                 <textarea 
                                     name="message"
                                     value={formData.message}
                                     onChange={handleChange}
                                     required
-                                    rows="5"
-                                    placeholder="Write your message here..." 
-                                    className="bg-base-100 shadow-inner px-4 py-4 border-2 border-transparent focus:border-primary/40 rounded-2xl focus:outline-none w-full font-bold text-sm text-base-content transition-all resize-none placeholder-gray-400"
+                                    rows="4"
+                                    placeholder="বিস্তারিত এখানে লিখুন..." 
+                                    className="bg-slate-50 focus:bg-white px-4 py-3 border border-slate-200 focus:border-[#FF4500] rounded-2xl focus:outline-none w-full font-semibold text-xs sm:text-sm transition-all resize-none"
                                 ></textarea>
                             </div>
 
-                            {/* Submit Button with Hover Action Area */}
-                            <div className="group/btn inline-block w-full md:w-auto">
-                                <button 
-                                    type="submit" 
-                                    disabled={loading}
-                                    className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-70 shadow-lg shadow-primary/20 px-8 rounded-2xl w-full h-14 font-black text-white text-sm tracking-wider active:scale-95 transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed"
-                                >
-                                    <span>{loading ? "Sending..." : "Send Message"}</span>
-                                    <FaPaperPlane className="text-xs transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-1 duration-300" />
-                                </button>
-                            </div>
+                            <button 
+                                type="submit" 
+                                disabled={loading}
+                                className="flex justify-center items-center gap-2 bg-[#FF4500] hover:bg-[#e03d00] disabled:opacity-70 shadow-lg shadow-orange-500/20 px-8 py-3.5 rounded-2xl w-full font-black text-white text-xs sm:text-sm tracking-wider active:scale-95 transition-all cursor-pointer"
+                            >
+                                <span>{loading ? "পাঠানো হচ্ছে..." : "এখনই মেসেজ পাঠান"}</span>
+                                <FaPaperPlane className="text-xs" />
+                            </button>
                         </form>
                     </div>
+
+                    {/* Right Column: Location Map */}
+                    <div className="lg:col-span-5 space-y-6">
+                        <div className="bg-white border border-orange-100 rounded-[2rem] overflow-hidden shadow-sm">
+                            <div className="p-5 border-b border-slate-100">
+                                <h4 className="font-extrabold text-base text-slate-900">Our Store Location</h4>
+                                <p className="text-slate-500 text-xs">আমাদের আউটলেটে সরাসরি চলে আসতে পারেন।</p>
+                            </div>
+                            <div className="w-full h-64 sm:h-72">
+                                <iframe
+                                    title="Store Location"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.082724458316!2d90.40473217602334!3d23.779932187627448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7715a31b815%3A0x2f90a2a1e3b6a22!2sBanani%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0 }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    className="w-full h-full"
+                                ></iframe>
+                            </div>
+                        </div>
+
+                        <div className="bg-[#FF4500] text-white p-6 rounded-[2rem] shadow-lg shadow-orange-500/20">
+                            <h4 className="font-extrabold text-lg flex items-center gap-2">
+                                <FaQuestionCircle /> দ্রত সাহায্যের প্রয়োজন?
+                            </h4>
+                            <p className="mt-2 text-xs opacity-90 leading-relaxed">
+                                অর্ডারের অবস্থা বা খেলনা সম্পর্কিত জরুরি তথ্যের জন্য আমাদের হটলাইন নম্বরে সরাসরি কল করুন।
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
