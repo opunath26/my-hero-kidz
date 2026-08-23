@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { FaBaby, FaChild, FaUserGraduate, FaSmile, FaArrowRight, FaCheckCircle } from "react-icons/fa";
+import {
+  FaBaby,
+  FaChild,
+  FaUserGraduate,
+  FaSmile,
+  FaArrowRight,
+  FaCheckCircle,
+} from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
 
 export default function AgeFilter() {
@@ -58,21 +65,24 @@ export default function AgeFilter() {
   ];
 
   const [selectedAgeId, setSelectedAgeId] = useState("3-5");
-  const activeGroup = ageGroups.find((g) => g.id === selectedAgeId) || ageGroups[1];
+  const activeGroup =
+    ageGroups.find((g) => g.id === selectedAgeId) || ageGroups[1];
 
   return (
     <section className="relative py-12 md:py-16 overflow-hidden">
       <div className="mx-auto px-4 max-w-7xl container">
-        
         {/* Section Header */}
         <div className="flex flex-col items-center mb-10 md:mb-12 text-center">
           <div className="inline-flex items-center gap-2 bg-rose-100/80 mb-3 px-4 py-1.5 border border-rose-200/80 rounded-full font-bold text-rose-800 text-xs sm:text-sm">
             <HiSparkles className="text-rose-500 animate-pulse" />
-            <span className="font-bangla">বয়স অনুযায়ী সঠিক খেলনা বেছে নিন</span>
+            <span className="font-bangla">বয়স অনুযায়ী সঠিক খেলনা বেছে নিন</span>
           </div>
 
           <h2 className="font-extrabold text-slate-900 text-2xl sm:text-3xl md:text-4xl tracking-tight">
-            Shop Toys By <span className="bg-clip-text bg-gradient-to-r from-rose-500 to-amber-500 text-transparent">Age Group</span>
+            Shop Toys By{" "}
+            <span className="bg-clip-text bg-gradient-to-r from-rose-500 to-amber-500 text-transparent">
+              Age Group
+            </span>
           </h2>
 
           <p className="mt-2 max-w-lg font-bangla text-slate-600 text-sm md:text-base">
@@ -103,10 +113,10 @@ export default function AgeFilter() {
 
         {/* Dynamic Display Card */}
         <div className="mx-auto max-w-4xl">
-          <div className={`relative bg-gradient-to-r ${activeGroup.bgColor} border border-slate-200/80 rounded-3xl p-6 md:p-10 shadow-lg shadow-slate-100 transition-all duration-500`}>
-            
+          <div
+            className={`relative bg-gradient-to-r ${activeGroup.bgColor} border border-slate-200/80 rounded-3xl p-6 md:p-10 shadow-lg shadow-slate-100 transition-all duration-500`}
+          >
             <div className="items-center gap-8 grid grid-cols-1 md:grid-cols-12">
-              
               {/* Left Content */}
               <div className="space-y-4 md:col-span-8 md:text-left text-center">
                 <span className="inline-block bg-white/90 shadow-sm px-3.5 py-1 border border-slate-100 rounded-full font-bangla font-bold text-slate-700 text-xs">
@@ -114,7 +124,10 @@ export default function AgeFilter() {
                 </span>
 
                 <h3 className="font-extrabold text-slate-900 text-xl sm:text-2xl md:text-3xl">
-                  {activeGroup.title} <span className="font-bangla font-normal text-slate-500 text-base md:text-lg">({activeGroup.ageRange})</span>
+                  {activeGroup.title}{" "}
+                  <span className="font-bangla font-normal text-slate-500 text-base md:text-lg">
+                    ({activeGroup.ageRange})
+                  </span>
                 </h3>
 
                 <p className="font-bangla text-slate-600 text-sm md:text-base">
@@ -124,7 +137,10 @@ export default function AgeFilter() {
                 {/* Features Checklist */}
                 <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
                   {activeGroup.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5 bg-white/80 shadow-sm backdrop-blur-sm px-3 py-1.5 border border-slate-100 rounded-xl font-bangla text-slate-700 text-xs sm:text-sm">
+                    <div
+                      key={idx}
+                      className="flex items-center gap-1.5 bg-white/80 shadow-sm backdrop-blur-sm px-3 py-1.5 border border-slate-100 rounded-xl font-bangla text-slate-700 text-xs sm:text-sm"
+                    >
                       <FaCheckCircle className="text-emerald-500 text-xs" />
                       <span>{feat}</span>
                     </div>
@@ -142,12 +158,9 @@ export default function AgeFilter() {
                   <FaArrowRight className="text-xs" />
                 </Link>
               </div>
-
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );
