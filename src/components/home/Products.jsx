@@ -34,13 +34,13 @@ const Products = ({ initialProducts = [] }) => {
         {/* Header Section */}
         <div className="mb-10 text-center">
           <span className="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full font-bold text-primary text-xs uppercase tracking-widest">
-            <FaChild className="text-sm" /> Hero Kids Collection 🎁
+            <FaChild className="text-sm" /> মেধা বিকাশে সেরা পছন্দ 🎁
           </span>
           <h2 className="mt-3 font-extrabold text-slate-900 text-3xl md:text-5xl tracking-tight">
-            Explore All <span className="text-primary">Hero Toys</span>
+            বাচ্চাদের সেরা <span className="text-primary">Hero Toys</span>
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-slate-500 text-sm md:text-base">
-            Discover safe, premium, and fun toys designed to bring smiles and inspire creativity.
+            স্মার্ট কার্ড, পাজল এবং ক্রিয়েটিভ লার্নিং টয় দিয়ে আপনার সন্তানের শেখার অভিজ্ঞতাকে করুন আরও আনন্দদায়ক ও নিরাপদ।
           </p>
         </div>
 
@@ -55,7 +55,7 @@ const Products = ({ initialProducts = [] }) => {
               </span>
               <input
                 type="text"
-                placeholder="Search toys by name or keyword..."
+                placeholder="খেলনার নাম দিয়ে খুঁজুন (Search toys)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="bg-slate-50 focus:bg-white py-2.5 pr-10 pl-11 border border-slate-200 focus:border-primary/50 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/10 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
@@ -73,7 +73,7 @@ const Products = ({ initialProducts = [] }) => {
             {/* Sort & Count Controls */}
             <div className="flex sm:flex-row flex-col justify-between sm:items-center gap-3 w-full md:w-auto">
               <span className="font-semibold text-slate-500 text-xs">
-                Showing <strong className="text-slate-900">{filteredProducts.length}</strong> of {initialProducts.length} items
+                মোট দেখানো হচ্ছে: <strong className="text-slate-900">{filteredProducts.length}</strong> টি খেলনা
               </span>
 
               <div className="flex items-center gap-2">
@@ -84,16 +84,16 @@ const Products = ({ initialProducts = [] }) => {
                   className="bg-slate-700 shadow-sm px-3 py-2.5 border border-slate-300 hover:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-800 font-semibold text-white text-xs transition-all cursor-pointer"
                 >
                   <option value="default" className="bg-slate-700 py-2 text-white">
-                    Sort by: Featured
+                    সাজান: ফিচারড (Featured)
                   </option>
                   <option value="price-low" className="bg-slate-700 py-2 text-white">
-                    Price: Low to High
+                    দাম: কম থেকে বেশি
                   </option>
                   <option value="price-high" className="bg-slate-700 py-2 text-white">
-                    Price: High to Low
+                    দাম: বেশি থেকে কম
                   </option>
                   <option value="rating" className="bg-slate-700 py-2 text-white">
-                    Top Rated
+                    সেরা রেটিং (Top Rated)
                   </option>
                 </select>
               </div>
@@ -115,18 +115,18 @@ const Products = ({ initialProducts = [] }) => {
             <div className="flex justify-center items-center bg-primary/10 mx-auto mb-4 rounded-2xl w-16 h-16 text-primary text-2xl">
               <FiPackage />
             </div>
-            <h3 className="font-bold text-slate-800 text-xl">No Toys Found</h3>
+            <h3 className="font-bold text-slate-800 text-xl">কোনো খেলনা পাওয়া যায়নি!</h3>
             <p className="mx-auto mt-1 max-w-xs text-slate-500 text-sm">
-              We couldn't find any products matching "{searchTerm}". Try searching with a different term.
+              আপনার খোঁজা "{searchTerm}" কিউওয়ার্ডের সাথে কোনো খেলনা মেলেনি। অন্য কিছু লিখে চেষ্টা করুন।
             </p>
             <button
               onClick={() => {
                 setSearchTerm('');
                 setSortBy('default');
               }}
-              className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 mt-5 px-5 py-2.5 rounded-xl font-semibold text-white text-xs transition-all"
+              className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 mt-5 px-5 py-2.5 rounded-xl font-semibold text-white text-xs transition-all cursor-pointer"
             >
-              Clear Search
+              সার্চ ক্লিয়ার করুন
             </button>
           </div>
         )}
