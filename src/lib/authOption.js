@@ -6,8 +6,8 @@ import { dbConnect } from "@/lib/dbConnect";
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -27,6 +27,10 @@ export const authOptions = {
 
         if (!user) {
           throw new Error("No user found with this email");
+        }
+
+        if (!user.password) {
+          throw new Error("Please login using your social account (Google)");
         }
 
         const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -49,7 +53,7 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      if (account.provider === "google") {
+      if (account?.provider === "google") {
         try {
           const usersCollection = await dbConnect("users");
           const isExist = await usersCollection.findOne({ email: user.email });
@@ -74,22 +78,28 @@ export const authOptions = {
     },
 
     async jwt({ token, user }) {
-      if (user) {
-        const usersCollection = await dbConnect("users");
-        const dbUser = await usersCollection.findOne({ email: user.email });
-        
-        if (dbUser) {
-          token.role = dbUser.role || "user";
-          token.id = dbUser._id.toString();
-          token.picture = dbUser.image || user.image || null;
+      const userEmail = user?.email || token?.email;
+
+      if (userEmail) {
+        try {
+          const usersCollection = await dbConnect("users");
+          const dbUser = await usersCollection.findOne({ email: userEmail });
+
+          if (dbUser) {
+            token.role = dbUser.role || "user";
+            token.id = dbUser._id.toString();
+            token.picture = dbUser.image || user?.image || token.picture || null;
+          }
+        } catch (err) {
+          console.error("Error fetching user in JWT callback:", err);
         }
       }
       return token;
     },
 
     async session({ session, token }) {
-      if (token) {
-        session.user.role = token.role;
+      if (session?.user && token) {
+        session.user.role = token.role || "user";
         session.user.id = token.id;
         session.user.image = token.picture;
       }
@@ -98,6 +108,7 @@ export const authOptions = {
   },
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

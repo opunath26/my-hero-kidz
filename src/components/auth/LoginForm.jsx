@@ -46,14 +46,14 @@ const LoginForm = () => {
 
     return (
         <div className="relative w-full">
-            {/* Top Success Toast */}
+            {/* Top Right Orange Success Toast */}
             {showSuccessToast && (
-                <div className="top-5 right-5 left-5 z-50 fixed flex justify-center items-center animate-bounce pointer-events-none">
-                    <div className="flex items-center gap-3 bg-slate-900/80 shadow-2xl backdrop-blur-xl px-5 py-3.5 border border-emerald-500/30 rounded-2xl text-white">
-                        <FaCheckCircle className="text-emerald-400 text-xl animate-pulse" />
+                <div className="top-5 right-5 z-50 fixed animate-slide-in pointer-events-none">
+                    <div className="flex items-center gap-3 bg-[#FF4500] shadow-orange-500/30 shadow-xl px-5 py-3.5 border border-orange-400/40 rounded-2xl text-white">
+                        <FaCheckCircle className="text-xl animate-pulse" />
                         <div>
-                            <h4 className="font-bold text-sm">স্বাগতম (Welcome Back!)</h4>
-                            <p className="text-slate-300 text-xs">সফলভাবে লগইন হয়েছে, অপেক্ষা করুন...</p>
+                            <h4 className="font-bold text-white text-sm">স্বাগতম (Welcome Back!)</h4>
+                            <p className="text-orange-100 text-xs">সফলভাবে লগইন হয়েছে, অপেক্ষা করুন...</p>
                         </div>
                     </div>
                 </div>

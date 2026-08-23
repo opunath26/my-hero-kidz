@@ -62,13 +62,13 @@ const RegisterForm = () => {
         if (data.success) {
           uploadedImageUrl = data.data.url;
         } else {
-          setError("ছবি আপলোড হতে সমস্যা হয়েছে, পুনরায় চেষ্টা করুন।");
+          setError("ছবি আপলোড হতে সমস্যা হয়েছে, পুনরায় চেষ্টা করুন।");
           setLoading(false);
           return;
         }
       } catch (err) {
         console.error("ImgBB Upload Error:", err);
-        setError("ছবি আপলোড ব্যর্থ হয়েছে!");
+        setError("ছবি আপলোড ব্যর্থ হয়েছে!");
         setLoading(false);
         return;
       }
@@ -98,24 +98,24 @@ const RegisterForm = () => {
           router.refresh();
         }, 2000);
       } else {
-        setError("রেজিস্ট্রেশন সফল হয়েছে, তবে অটোমেটিক লগইন ব্যর্থ। ম্যানুয়ালি লগইন করুন।");
+        setError("রেজিস্ট্রেশন সফল হয়েছে, তবে অটোমেটিক লগইন ব্যর্থ। ম্যানুয়ালি লগইন করুন।");
       }
     } else {
       setLoading(false);
-      setError(res?.message || "রেজিস্ট্রেশন সম্পূর্ণ করা সম্ভব হয়নি");
+      setError(res?.message || "রেজিস্ট্রেশন সম্পূর্ণ করা সম্ভব হয়নি");
     }
   };
 
   return (
     <div className="relative w-full">
-      {/* Top Success Toast */}
+      {/* Top Right Orange Success Toast */}
       {showSuccessToast && (
-        <div className="top-5 right-5 left-5 z-50 fixed flex justify-center items-center animate-bounce pointer-events-none">
-          <div className="flex items-center gap-3 bg-slate-900/80 shadow-2xl backdrop-blur-xl px-5 py-3.5 border border-emerald-500/30 rounded-2xl text-white">
-            <FaCheckCircle className="text-emerald-400 text-xl animate-pulse" />
+        <div className="top-5 right-5 z-50 fixed animate-slide-in pointer-events-none">
+          <div className="flex items-center gap-3 bg-[#FF4500] shadow-orange-500/30 shadow-xl px-5 py-3.5 border border-orange-400/40 rounded-2xl text-white">
+            <FaCheckCircle className="text-xl animate-pulse" />
             <div>
-              <h4 className="font-bold text-sm">অভিনন্দন! (Registration Successful)</h4>
-              <p className="text-slate-300 text-xs">হোম পেজে রিডাইরেক্ট করা হচ্ছে...</p>
+              <h4 className="font-bold text-white text-sm">অভিনন্দন! (Registration Successful)</h4>
+              <p className="text-orange-100 text-xs">হোম পেজে রিডাইরেক্ট করা হচ্ছে...</p>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ const RegisterForm = () => {
             <input
               name="confirmPassword"
               type="password"
-              placeholder="পুনরায় পাসওয়ার্ড লিখুন"
+              placeholder="পুনরায় পাসওয়ার্ড লিখুন"
               disabled={loading || showSuccessToast}
               className="bg-white/60 focus:bg-white/90 disabled:opacity-60 shadow-inner backdrop-blur-md py-3 pr-4 pl-11 border border-white/60 focus:border-[#FF4500] rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-500/15 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               required
@@ -260,7 +260,7 @@ const RegisterForm = () => {
               <span>একাউন্ট তৈরি হচ্ছে...</span>
             </>
           ) : showSuccessToast ? (
-            "সফল হয়েছে!"
+            "সফল হয়েছে!"
           ) : (
             "রেজিস্টার করুন (Sign Up)"
           )}
