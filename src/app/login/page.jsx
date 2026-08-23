@@ -7,21 +7,22 @@ import SocialButton from '@/components/auth/SocialButton';
 const LoginPage = () => {
     return (
         <div className="relative flex justify-center items-center px-4 py-12 min-h-[85vh] overflow-hidden">
-            
+
             {/* Background Glow Orbs for Glassmorphic Contrast */}
             <div className="top-1/4 left-1/2 -z-10 absolute bg-orange-400/30 blur-[100px] rounded-full w-72 h-72 -translate-x-full"></div>
             <div className="bottom-1/4 left-1/2 -z-10 absolute bg-amber-300/30 blur-[100px] rounded-full w-72 h-72"></div>
 
             {/* Glassmorphic Card */}
             <div className="flex flex-col items-center bg-white/40 shadow-2xl backdrop-blur-xl p-8 border border-white/60 rounded-3xl w-full max-w-md">
-                
+
                 {/* Animated Logo Section */}
                 <div className="relative slide-in-from-top-6 mb-4 w-20 h-20 hover:rotate-6 hover:scale-110 transition-all animate-in duration-300 cursor-pointer transform fade-in zoom-in-75">
-                    <Image 
-                        src="https://i.ibb.co.com/hRbt48zS/logo.png" 
-                        alt="Hero Kidz Logo" 
-                        fill 
-                        className="drop-shadow-md object-contain"
+                    <Image
+                        src="/assets/logo.png"
+                        alt="Hero Kidz Logo"
+                        width={80}
+                        height={80}
+                        className="drop-shadow-md w-full h-full object-contain"
                         priority
                     />
                 </div>
