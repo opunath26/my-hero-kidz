@@ -64,7 +64,7 @@ const Contact = () => {
     ];
 
     return (
-        <section className="bg-[#FFFDF9] py-12 lg:py-16 text-slate-800 overflow-hidden">
+        <section className="bg-[#FFFDF9] py-12 lg:py-16 overflow-hidden text-slate-800">
             <div className="mx-auto px-4 max-w-6xl container">
                 
                 {/* Header Section */}
@@ -75,7 +75,7 @@ const Contact = () => {
                     
                     <h2 className="mt-4 font-black text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight">
                         <span className="text-[#FF4500]">খেলনা বা যেকোনো প্রশ্নের জন্য</span> <br />
-                        <span className="text-slate-900 font-extrabold">We'd Love to Hear From You!</span>
+                        <span className="font-extrabold text-slate-900">We'd Love to Hear From You!</span>
                     </h2>
                     
                     <p className="mx-auto mt-3 max-w-xl text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed">
@@ -88,15 +88,15 @@ const Contact = () => {
                     {infoCards.map((card) => (
                         <div 
                             key={card.id}
-                            className="group flex items-center gap-4 bg-white shadow-sm hover:shadow-xl p-6 border border-orange-100 hover:border-[#FF4500]/40 rounded-3xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                            className="group flex items-center gap-4 bg-white shadow-sm hover:shadow-xl p-6 border border-orange-100 hover:border-[#FF4500]/40 rounded-3xl transition-all hover:-translate-y-1 duration-300 cursor-pointer"
                         >
                             <div className={`p-4 rounded-2xl border text-xl flex items-center justify-center ${card.badgeBg} group-hover:scale-110 transition-transform`}>
                                 {card.icon}
                             </div>
                             <div>
-                                <h3 className="font-bold text-base sm:text-lg text-slate-900">{card.title}</h3>
+                                <h3 className="font-bold text-slate-900 text-base sm:text-lg">{card.title}</h3>
                                 <p className="mt-0.5 font-bold text-[#FF4500] text-xs sm:text-sm">{card.detail}</p>
-                                <p className="mt-0.5 font-medium text-slate-400 text-[11px] sm:text-xs">{card.subDetail}</p>
+                                <p className="mt-0.5 font-medium text-[11px] text-slate-400 sm:text-xs">{card.subDetail}</p>
                             </div>
                         </div>
                     ))}
@@ -107,11 +107,11 @@ const Contact = () => {
                     
                     {/* Contact Form */}
                     <div className="lg:col-span-7 bg-white shadow-sm p-6 sm:p-8 border border-orange-100 rounded-[2rem]">
-                        <h3 className="font-extrabold text-xl sm:text-2xl text-slate-900">মেসেজ পাঠান</h3>
+                        <h3 className="font-extrabold text-slate-900 text-xl sm:text-2xl">মেসেজ পাঠান</h3>
                         <p className="mb-6 text-slate-500 text-xs sm:text-sm">নিচের ফর্মটি পূরণ করে আপনার প্রশ্ন বা মতামত জানান।</p>
 
                         {submitted && (
-                            <div className="bg-emerald-50 mb-6 p-4 border border-emerald-200 rounded-2xl text-emerald-800 text-xs sm:text-sm font-bold">
+                            <div className="bg-emerald-50 mb-6 p-4 border border-emerald-200 rounded-2xl font-bold text-emerald-800 text-xs sm:text-sm">
                                 🎉 ধন্যবাদ! আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে। আমরা দ্রুত যোগাযোগ করবো।
                             </div>
                         )}
@@ -119,19 +119,19 @@ const Contact = () => {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
                                 <div className="space-y-1.5">
-                                    <label className="font-bold text-xs text-slate-700">আপনার নাম <span className="text-[#FF4500]">*</span></label>
+                                    <label className="font-bold text-slate-700 text-xs">আপনার নাম <span className="text-[#FF4500]">*</span></label>
                                     <input 
                                         type="text" 
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
-                                        placeholder="যেমন: অপূ নাথ" 
+                                        placeholder="যেমন: জন ডো" 
                                         className="bg-slate-50 focus:bg-white px-4 py-3 border border-slate-200 focus:border-[#FF4500] rounded-2xl focus:outline-none w-full font-semibold text-xs sm:text-sm transition-all"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="font-bold text-xs text-slate-700">ইমেইল এড্রেস <span className="text-[#FF4500]">*</span></label>
+                                    <label className="font-bold text-slate-700 text-xs">ইমেইল এড্রেস <span className="text-[#FF4500]">*</span></label>
                                     <input 
                                         type="email" 
                                         name="email"
@@ -145,7 +145,7 @@ const Contact = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="font-bold text-xs text-slate-700">বিষয় / Subject <span className="text-[#FF4500]">*</span></label>
+                                <label className="font-bold text-slate-700 text-xs">বিষয় / Subject <span className="text-[#FF4500]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="subject"
@@ -158,7 +158,7 @@ const Contact = () => {
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="font-bold text-xs text-slate-700">আপনার মেসেজ <span className="text-[#FF4500]">*</span></label>
+                                <label className="font-bold text-slate-700 text-xs">আপনার মেসেজ <span className="text-[#FF4500]">*</span></label>
                                 <textarea 
                                     name="message"
                                     value={formData.message}
@@ -182,10 +182,10 @@ const Contact = () => {
                     </div>
 
                     {/* Right Column: Location Map */}
-                    <div className="lg:col-span-5 space-y-6">
-                        <div className="bg-white border border-orange-100 rounded-[2rem] overflow-hidden shadow-sm">
-                            <div className="p-5 border-b border-slate-100">
-                                <h4 className="font-extrabold text-base text-slate-900">Our Store Location</h4>
+                    <div className="space-y-6 lg:col-span-5">
+                        <div className="bg-white shadow-sm border border-orange-100 rounded-[2rem] overflow-hidden">
+                            <div className="p-5 border-slate-100 border-b">
+                                <h4 className="font-extrabold text-slate-900 text-base">Our Store Location</h4>
                                 <p className="text-slate-500 text-xs">আমাদের আউটলেটে সরাসরি চলে আসতে পারেন।</p>
                             </div>
                             <div className="w-full h-64 sm:h-72">
@@ -203,11 +203,11 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        <div className="bg-[#FF4500] text-white p-6 rounded-[2rem] shadow-lg shadow-orange-500/20">
-                            <h4 className="font-extrabold text-lg flex items-center gap-2">
+                        <div className="bg-[#FF4500] shadow-lg shadow-orange-500/20 p-6 rounded-[2rem] text-white">
+                            <h4 className="flex items-center gap-2 font-extrabold text-lg">
                                 <FaQuestionCircle /> দ্রত সাহায্যের প্রয়োজন?
                             </h4>
-                            <p className="mt-2 text-xs opacity-90 leading-relaxed">
+                            <p className="opacity-90 mt-2 text-xs leading-relaxed">
                                 অর্ডারের অবস্থা বা খেলনা সম্পর্কিত জরুরি তথ্যের জন্য আমাদের হটলাইন নম্বরে সরাসরি কল করুন।
                             </p>
                         </div>
