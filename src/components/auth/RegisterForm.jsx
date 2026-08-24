@@ -4,34 +4,52 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
-import { FaUser, FaEnvelope, FaLock, FaCamera, FaTrash, FaCheckCircle, FaSpinner } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaCamera, FaTrash, FaSpinner } from "react-icons/fa";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
 
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const router = useRouter();
+
+  // Toast Custom Styles (Matching Brand Orange Theme)
+  const successToastStyle = {
+    borderRadius: '12px',
+    background: '#ea580c', // Orange Theme
+    color: '#fff',
+    fontWeight: 'bold',
+    padding: '12px 20px',
+    boxShadow: '0 10px 15px -3px rgba(234, 88, 12, 0.3)',
+  };
+
+  const errorToastStyle = {
+    borderRadius: '12px',
+    background: '#ef4444',
+    color: '#fff',
+    fontWeight: 'bold',
+    padding: '12px 20px',
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        setError("ছবি সাইজ সর্বোচ্চ 2MB হতে পারবে।");
+        toast.error("ছবি সাইজ সর্বোচ্চ 2MB হতে পারবে।", {
+          style: errorToastStyle,
+          iconTheme: { primary: '#fff', secondary: '#ef4444' }
+        });
         return;
       }
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
-      setError("");
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     const name = e.target.name.value;
     const email = e.target.email.value;
@@ -39,13 +57,17 @@ const RegisterForm = () => {
     const confirmPassword = e.target.confirmPassword.value;
 
     if (password !== confirmPassword) {
-      setError("পাসওয়ার্ড দুইটি মেলেনি!");
+      toast.error("পাসওয়ার্ড দুইটি মেলেনি!", {
+        style: errorToastStyle,
+        iconTheme: { primary: '#fff', secondary: '#ef4444' }
+      });
       setLoading(false);
       return;
     }
 
     let uploadedImageUrl = "";
 
+    // Image Upload Process
     if (imageFile) {
       const formData = new FormData();
       formData.append("image", imageFile);
@@ -62,72 +84,87 @@ const RegisterForm = () => {
         if (data.success) {
           uploadedImageUrl = data.data.url;
         } else {
-          setError("ছবি আপলোড হতে সমস্যা হয়েছে, পুনরায় চেষ্টা করুন।");
+          toast.error("ছবি আপলোড হতে সমস্যা হয়েছে, পুনরায় চেষ্টা করুন।", {
+            style: errorToastStyle,
+            iconTheme: { primary: '#fff', secondary: '#ef4444' }
+          });
           setLoading(false);
           return;
         }
       } catch (err) {
         console.error("ImgBB Upload Error:", err);
-        setError("ছবি আপলোড ব্যর্থ হয়েছে!");
+        toast.error("ছবি আপলোড ব্যর্থ হয়েছে!", {
+          style: errorToastStyle,
+          iconTheme: { primary: '#fff', secondary: '#ef4444' }
+        });
         setLoading(false);
         return;
       }
     }
 
-    const res = await postUser({
-      name,
-      email,
-      image: uploadedImageUrl,
-      password,
-    });
-
-    if (res?.success) {
-      const loginRes = await signIn("credentials", {
+    // User Registration
+    try {
+      const res = await postUser({
+        name,
         email,
+        image: uploadedImageUrl,
         password,
-        redirect: false,
       });
 
-      setLoading(false);
+      if (res?.success) {
+        toast.success("অভিনন্দন! (Registration Successful)", {
+          style: successToastStyle,
+          iconTheme: { primary: '#fff', secondary: '#ea580c' }
+        });
 
-      if (loginRes?.ok) {
-        setShowSuccessToast(true);
+        // Attempt Auto Login
+        const loginRes = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
 
-        setTimeout(() => {
-          router.push("/");
-          router.refresh();
-        }, 2000);
+        setLoading(false);
+
+        if (loginRes?.ok) {
+          toast.success("হোম পেজে রিডাইরেক্ট করা হচ্ছে...", {
+            style: successToastStyle,
+            iconTheme: { primary: '#fff', secondary: '#ea580c' }
+          });
+
+          setTimeout(() => {
+            router.push("/");
+            router.refresh();
+          }, 2000);
+        } else {
+          toast.error("রেজিস্ট্রেশন সফল হয়েছে, তবে অটোমেটিক লগইন ব্যর্থ। ম্যানুয়ালি লগইন করুন।", {
+            style: errorToastStyle,
+            iconTheme: { primary: '#fff', secondary: '#ef4444' }
+          });
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+        }
       } else {
-        setError("রেজিস্ট্রেশন সফল হয়েছে, তবে অটোমেটিক লগইন ব্যর্থ। ম্যানুয়ালি লগইন করুন।");
+        setLoading(false);
+        toast.error(res?.message || "রেজিস্ট্রেশন সম্পূর্ণ করা সম্ভব হয়নি", {
+          style: errorToastStyle,
+          iconTheme: { primary: '#fff', secondary: '#ef4444' }
+        });
       }
-    } else {
+    } catch (error) {
+      console.error("Registration Error:", error);
+      toast.error("সার্ভারে সমস্যা হয়েছে!", {
+        style: errorToastStyle,
+        iconTheme: { primary: '#fff', secondary: '#ef4444' }
+      });
       setLoading(false);
-      setError(res?.message || "রেজিস্ট্রেশন সম্পূর্ণ করা সম্ভব হয়নি");
     }
   };
 
   return (
     <div className="relative w-full">
-      {/* Top Right Orange Success Toast */}
-      {showSuccessToast && (
-        <div className="top-5 right-5 z-50 fixed animate-slide-in pointer-events-none">
-          <div className="flex items-center gap-3 bg-[#FF4500] shadow-orange-500/30 shadow-xl px-5 py-3.5 border border-orange-400/40 rounded-2xl text-white">
-            <FaCheckCircle className="text-xl animate-pulse" />
-            <div>
-              <h4 className="font-bold text-white text-sm">অভিনন্দন! (Registration Successful)</h4>
-              <p className="text-orange-100 text-xs">হোম পেজে রিডাইরেক্ট করা হচ্ছে...</p>
-            </div>
-          </div>
-        </div>
-      )}
-
       <form onSubmit={handleRegister} className="space-y-4 w-full">
-        {error && (
-          <div className="bg-red-500/10 backdrop-blur-md p-3 border border-red-500/20 rounded-2xl font-semibold text-red-600 text-xs text-center">
-            {error}
-          </div>
-        )}
-
         {/* Profile Photo File Upload Field */}
         <div className="flex flex-col justify-center items-center pb-2">
           <label className="mb-2 font-bold text-slate-700 text-xs uppercase tracking-wider">
@@ -154,7 +191,7 @@ const RegisterForm = () => {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              disabled={loading || showSuccessToast}
+              disabled={loading}
               className="absolute inset-0 opacity-0 w-full h-full cursor-pointer disabled:cursor-not-allowed"
             />
 
@@ -187,7 +224,7 @@ const RegisterForm = () => {
               name="name"
               type="text"
               placeholder="আপনার পুরো নাম লিখুন"
-              disabled={loading || showSuccessToast}
+              disabled={loading}
               className="bg-white/60 focus:bg-white/90 disabled:opacity-60 shadow-inner backdrop-blur-md py-3 pr-4 pl-11 border border-white/60 focus:border-[#FF4500] rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-500/15 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               required
             />
@@ -205,7 +242,7 @@ const RegisterForm = () => {
               name="email"
               type="email"
               placeholder="আপনার ইমেইল লিখুন"
-              disabled={loading || showSuccessToast}
+              disabled={loading}
               className="bg-white/60 focus:bg-white/90 disabled:opacity-60 shadow-inner backdrop-blur-md py-3 pr-4 pl-11 border border-white/60 focus:border-[#FF4500] rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-500/15 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               required
             />
@@ -223,7 +260,7 @@ const RegisterForm = () => {
               name="password"
               type="password"
               placeholder="পাসওয়ার্ড তৈরি করুন"
-              disabled={loading || showSuccessToast}
+              disabled={loading}
               className="bg-white/60 focus:bg-white/90 disabled:opacity-60 shadow-inner backdrop-blur-md py-3 pr-4 pl-11 border border-white/60 focus:border-[#FF4500] rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-500/15 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               required
             />
@@ -241,7 +278,7 @@ const RegisterForm = () => {
               name="confirmPassword"
               type="password"
               placeholder="পুনরায় পাসওয়ার্ড লিখুন"
-              disabled={loading || showSuccessToast}
+              disabled={loading}
               className="bg-white/60 focus:bg-white/90 disabled:opacity-60 shadow-inner backdrop-blur-md py-3 pr-4 pl-11 border border-white/60 focus:border-[#FF4500] rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-500/15 w-full font-medium text-slate-800 text-sm transition-all placeholder-slate-400"
               required
             />
@@ -251,7 +288,7 @@ const RegisterForm = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={loading || showSuccessToast}
+          disabled={loading}
           className="flex justify-center items-center gap-2 bg-[#FF4500] hover:bg-[#e03d00] disabled:opacity-60 shadow-lg shadow-orange-500/30 mt-2 py-3.5 rounded-2xl w-full font-extrabold text-white text-sm tracking-wide active:scale-[0.98] transition-all cursor-pointer disabled:cursor-not-allowed"
         >
           {loading ? (
@@ -259,8 +296,6 @@ const RegisterForm = () => {
               <FaSpinner className="text-base animate-spin" />
               <span>একাউন্ট তৈরি হচ্ছে...</span>
             </>
-          ) : showSuccessToast ? (
-            "সফল হয়েছে!"
           ) : (
             "রেজিস্টার করুন (Sign Up)"
           )}
