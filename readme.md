@@ -1,57 +1,90 @@
-# Hero Kidzz - Project Assets
-<img src="assets/hero.png">
-## Overview
+# 🧸 HeroKidz - Premium Kids' Toy & Care E-commerce Platform
 
-Hero Kidzz is a small, single-vendor e-commerce web application designed for selling children's products. This repository contains all project assets including images, icons, and media files.
+**HeroKidz** is a full-featured, modern, and responsive e-commerce web application designed for browsing, purchasing, and managing kids' toys and care products. Built with performance, security, and exceptional user experience in mind.
 
-## Features
+🚀 **Live Demo:** [https://hero-kidz-iota.vercel.app](https://hero-kidz-iota.vercel.app)
 
-- 🛍️ **Product Catalog** - Browse children's toys and accessories
-- 🛒 **Shopping Cart** - Add and manage items
-- 💳 **Easy Checkout** - Safe payment processing
-- 📦 **Order Invoice** - Monitor shipments
-- 👤 **User Accounts** - Save preferences and history
-- 🎨 **Responsive Design** - Mobile-friendly interface
-- ⭐ **Product Reviews** - Customer feedback system
+---
 
-## Starter packages
-```
-npm install react-icons mongodb bcryptjs
-```
+## 🌟 Key Features
 
-## Colors
+### 🛍️ User Experience & Shop
+* **Dynamic Product Catalog:** Explore products with real-time dynamic rendering and category-based filtering.
+* **Product Details & Cart:** Detailed view of each product with dynamic cart capabilities and instant feedback.
+* **HR / Recruiter Demo Mode:** Built-in **Auto Fill Demo Admin Credentials** in the login form for seamless testing.
+* **Policy & Support Pages:** Dedicated pages for FAQ, Privacy Policy, Terms & Conditions, and Shipping Info.
+* **Responsive & Accessible UI:** Pixel-perfect design tailored for mobile, tablet, and desktop devices.
+* **Custom 404 Page:** Engaging, theme-focused 404 page for effortless user navigation.
 
-```
- /* Brand */
-  --color-primary: oklch(65% 0.23 35);
-  --color-secondary: oklch(58% 0.18 30);
-  --color-accent: oklch(72% 0.20 55);
+### 🔐 Authentication & Security
+* **NextAuth.js Integration:** Secure credentials-based authentication with OAuth support (Google Sign-In).
+* **Protected Routes:** Role-based accessibility for admin and regular users.
 
-  /* Base */
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(97% 0.01 95);
-  --color-base-300: oklch(92% 0.015 95);
+### 🛠️ Developer & Admin Features
+* **Admin Dashboard:** Centralized layout to manage products, categories, and inventory.
+* **Notification System:** Real-time feedback using custom Toast notifications.
+* **Contact Integration:** Seamless contact form enabled via EmailJS.
 
-  /* Neutral */
-  --color-neutral: oklch(35% 0.01 260);
-  --color-neutral-content: oklch(96% 0 0);
+---
 
-  /* Feedback */
-  --color-success: oklch(70% 0.17 145);
-  --color-error: oklch(62% 0.24 28);
-```
+## 🛠️ Tech Stack & Tools
 
-## Getting Started
+* **Frontend:** Next.js (App Router), React, Tailwind CSS, Framer Motion
+* **Authentication:** NextAuth.js
+* **Database & Hosting:** MongoDB Atlas, Vercel
+* **State & Form Management:** React Hooks, React Hot Toast
+* **Icons & Assets:** React Icons, Cloudinary / Image Hosting
 
-1. Clone the repository
-2. Extract assets to your project directory
-3. Reference images in your application
+---
 
-## Contributing
+## 🔑 HR & Demo Credentials
 
-Follow project guidelines when adding new assets.
+For quick evaluation and testing of admin privileges, use the **Auto Fill Demo** button on the Login page or enter manually:
 
-## License
+* **Email:** `admin@gmail.com`
+* **Password:** `Hero123@`
 
-All assets are proprietary to Hero Kidzz.
-# Hero-Kidz-assets
+---
+
+## 🚀 Getting Started (Local Setup)
+
+To run **HeroKidz** on your local machine, follow these steps:
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/opunath26/my-hero-kidz.git](https://github.com/opunath26/my-hero-kidz.git)
+cd hero-kidz
+2. Install Dependencies
+Bash
+npm install
+3. Environment Variables Setup
+Create a .env.local file in the root directory and configure the following variables:
+
+Code snippet
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_nextauth_secret
+MONGODB_URI=your_mongodb_connection_string
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+4. Run Development Server
+Bash
+npm run dev
+Open http://localhost:3000 in your browser to see the result.
+
+📝 Commit Standard
+This project follows Conventional Commits for clean and maintainable version control history:
+
+feat: New features
+
+fix: Bug fixes
+
+style: Design and UI layout updates
+
+chore: Maintenance and build configuration
+
+🤝 Contact & Support
+Developed with ❤️ by Apu Nath
+
+Email: apunath1026@gmail.com
+
+Portfolio: apu-nath.vercel.app
