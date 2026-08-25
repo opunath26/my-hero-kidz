@@ -2,14 +2,17 @@
 
 import { collection, dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
+import { revalidatePath } from "next/cache";
 
 export const getProducts = async () => {
     try {
         const db = await dbConnect(collection.PRODUCTS); 
-        const products = await db.find().toArray(); 
+        const products = await db.find().sort({ createdAt: -1 }).toArray(); 
         
         return products.map(product => ({
             ...product,
+            ... (product.createdAt && { createdAt: product.createdAt.toString() }),
+            ... (product.updatedAt && { updatedAt: product.updatedAt.toString() }),
             _id: product._id.toString()
         }));
     } catch (error) {
@@ -30,6 +33,8 @@ export const getSingleProduct = async (id) => {
 
         if (product) {
             product._id = product._id.toString(); 
+            if (product.createdAt) product.createdAt = product.createdAt.toString();
+            if (product.updatedAt) product.updatedAt = product.updatedAt.toString();
         }
         return product || {};
     } catch (error) {
@@ -54,6 +59,8 @@ export const getRelatedProducts = async (currentProductId) => {
 
         return products.map(product => ({
             ...product,
+            ... (product.createdAt && { createdAt: product.createdAt.toString() }),
+            ... (product.updatedAt && { updatedAt: product.updatedAt.toString() }),
             _id: product._id.toString()
         }));
     } catch (error) {

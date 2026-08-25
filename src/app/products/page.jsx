@@ -2,6 +2,9 @@ import { getProducts } from '@/actions/product';
 import Products from '@/components/home/Products';
 import React from 'react';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: { default: "All Products" },
   description: "Explore our diverse range of products designed to meet your needs. From innovative solutions to everyday essentials, discover quality and value in every item we offer.",
