@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { 
-  FaStar, 
-  FaTruck, 
-  FaShieldAlt, 
-  FaUndo, 
-  FaChevronRight, 
-  FaCheckCircle, 
-  FaHeart, 
-  FaAward, 
-  FaLeaf, 
-  FaBoxOpen 
+import {
+    FaStar,
+    FaTruck,
+    FaShieldAlt,
+    FaUndo,
+    FaChevronRight,
+    FaCheckCircle,
+    FaHeart,
+    FaAward,
+    FaLeaf,
+    FaBoxOpen
 } from 'react-icons/fa';
 import AddToCartSection from './AddToCartSection';
 import RelatedProducts from './RelatedProducts';
@@ -136,34 +136,37 @@ export default function ProductDetailsClient({ product, relatedProducts = [], us
                             </div>
 
                             {/* Trust Badges */}
-                            <div className="gap-4 grid grid-cols-3 mt-6 pt-6 border-slate-100 border-t">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex justify-center items-center bg-orange-500/10 p-2.5 rounded-xl text-[#FF4500] text-lg">
+                            <div className="gap-2 sm:gap-4 grid grid-cols-3 mt-6 pt-6 border-slate-100 border-t">
+                                {/* Feature 1 */}
+                                <div className="flex sm:flex-row flex-col items-center sm:items-center gap-2 sm:gap-3 sm:text-left text-center">
+                                    <div className="flex justify-center items-center bg-orange-500/10 p-2 sm:p-2.5 rounded-xl text-[#FF4500] text-base sm:text-lg shrink-0">
                                         <FaTruck />
                                     </div>
                                     <div>
-                                        <h4 className="font-extrabold text-slate-800 text-xs md:text-sm">Fast Shipping</h4>
-                                        <p className="font-medium text-[11px] text-slate-400">Across Bangladesh</p>
+                                        <h4 className="font-extrabold text-[11px] text-slate-800 sm:text-xs md:text-sm leading-tight">Fast Shipping</h4>
+                                        <p className="mt-0.5 font-medium text-[10px] text-slate-400 sm:text-[11px]">Across Bangladesh</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <div className="flex justify-center items-center bg-emerald-500/10 p-2.5 rounded-xl text-emerald-600 text-lg">
+                                {/* Feature 2 */}
+                                <div className="flex sm:flex-row flex-col items-center sm:items-center gap-2 sm:gap-3 sm:text-left text-center">
+                                    <div className="flex justify-center items-center bg-emerald-500/10 p-2 sm:p-2.5 rounded-xl text-emerald-600 text-base sm:text-lg shrink-0">
                                         <FaShieldAlt />
                                     </div>
                                     <div>
-                                        <h4 className="font-extrabold text-slate-800 text-xs md:text-sm">100% Authentic</h4>
-                                        <p className="font-medium text-[11px] text-slate-400">Guaranteed Quality</p>
+                                        <h4 className="font-extrabold text-[11px] text-slate-800 sm:text-xs md:text-sm leading-tight">100% Authentic</h4>
+                                        <p className="mt-0.5 font-medium text-[10px] text-slate-400 sm:text-[11px]">Guaranteed Quality</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <div className="flex justify-center items-center bg-amber-500/10 p-2.5 rounded-xl text-amber-600 text-lg">
+                                {/* Feature 3 */}
+                                <div className="flex sm:flex-row flex-col items-center sm:items-center gap-2 sm:gap-3 sm:text-left text-center">
+                                    <div className="flex justify-center items-center bg-amber-500/10 p-2 sm:p-2.5 rounded-xl text-amber-600 text-base sm:text-lg shrink-0">
                                         <FaUndo />
                                     </div>
                                     <div>
-                                        <h4 className="font-extrabold text-slate-800 text-xs md:text-sm">7 Days Return</h4>
-                                        <p className="font-medium text-[11px] text-slate-400">Hassle Free Policy</p>
+                                        <h4 className="font-extrabold text-[11px] text-slate-800 sm:text-xs md:text-sm leading-tight">7 Days Return</h4>
+                                        <p className="mt-0.5 font-medium text-[10px] text-slate-400 sm:text-[11px]">Hassle Free Policy</p>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +176,7 @@ export default function ProductDetailsClient({ product, relatedProducts = [], us
                 </div>
 
                 {/* 3. NEW SECTION: Why Choose & Quality Assurance (Enhances Engagement) */}
-                <div className="bg-gradient-to-r from-orange-500 to-amber-500 my-10 p-8 md:p-10 rounded-3xl text-white shadow-lg shadow-orange-500/10">
+                <div className="bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/10 my-10 p-8 md:p-10 rounded-3xl text-white">
                     <div className="mb-8 text-center">
                         <span className="bg-white/20 px-3 py-1 rounded-full font-bold text-xs uppercase tracking-widest">
                             Crafted with Care
@@ -214,31 +217,28 @@ export default function ProductDetailsClient({ product, relatedProducts = [], us
                     <div className="flex border-slate-100 border-b overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('description')}
-                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${
-                                activeTab === 'description' 
-                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30' 
+                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${activeTab === 'description'
+                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30'
                                     : 'border-transparent text-slate-500 hover:text-slate-800'
-                            }`}
+                                }`}
                         >
                             Full Description
                         </button>
                         <button
                             onClick={() => setActiveTab('specifications')}
-                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${
-                                activeTab === 'specifications' 
-                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30' 
+                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${activeTab === 'specifications'
+                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30'
                                     : 'border-transparent text-slate-500 hover:text-slate-800'
-                            }`}
+                                }`}
                         >
                             Specifications
                         </button>
                         <button
                             onClick={() => setActiveTab('safety')}
-                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${
-                                activeTab === 'safety' 
-                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30' 
+                            className={`px-8 py-4 font-bold text-sm transition-all whitespace-nowrap border-b-2 ${activeTab === 'safety'
+                                    ? 'border-[#FF4500] text-[#FF4500] bg-orange-50/30'
                                     : 'border-transparent text-slate-500 hover:text-slate-800'
-                            }`}
+                                }`}
                         >
                             Quality & Safety
                         </button>
