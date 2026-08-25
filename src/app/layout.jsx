@@ -35,7 +35,7 @@ export const metadata = {
     siteName: "Hero Kidz",
     images: [
       {
-        url: "https://i.ibb.co.com/fGNgv8Fd/home.png",
+        url: "https://i.ibb.co.com/Fj1kMZ8/home.png",
         width: 1200,
         height: 630,
         alt: "Hero Kidz Home Page Preview",
@@ -49,7 +49,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Hero Kidz | Premium Kids Products & Toys",
     description: "Explore our diverse range of products designed to meet your child's needs.",
-    images: ["https://i.ibb.co.com/fGNgv8Fd/home.png"],
+    images: ["https://i.ibb.co.com/Fj1kMZ8/home.png"],
   },
 
   icons: {

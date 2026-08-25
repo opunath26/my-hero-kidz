@@ -27,7 +27,7 @@ export const generateMetadata = async ({ params }) => {
             siteName: "Hero Kidz",
             images: [
                 {
-                    url: product.image || "https://i.ibb.co.com/N2ww2RBw/product.png",
+                    url: product.image || "https://i.ibb.co.com/G41XZTFr/products.png",
                     width: 1200,
                     height: 630,
                     alt: product.title,
@@ -39,7 +39,7 @@ export const generateMetadata = async ({ params }) => {
             card: "summary_large_image",
             title: `${product.title} | Hero Kidz`,
             description: shortDescription,
-            images: [product.image || "https://i.ibb.co.com/N2ww2RBw/product.png"],
+            images: [product.image || "https://i.ibb.co.com/G41XZTFr/products.png"],
         },
     };
 };
