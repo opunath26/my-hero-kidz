@@ -27,8 +27,8 @@ const Logo = () => {
                     </span>
                 </div>
 
-                {/* Brand Name Text with Gradient Underline */}
-                <div className="flex flex-col">
+                {/* Brand Name Text with Gradient Underline (Hidden on Mobile, Visible from SM screens) */}
+                <div className="hidden sm:flex flex-col">
                     <div className="flex items-center gap-1">
                         <h2 className="font-black text-slate-800 text-xl md:text-2xl tracking-tight">
                             Hero <span className="text-[#FF4500] group-hover:text-amber-500 transition-colors duration-300">Kidz</span>
